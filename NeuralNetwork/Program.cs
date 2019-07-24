@@ -13,36 +13,36 @@ namespace NeuralNetwork
         static void Main(string[] args)
         {
             _fileManager = new FileManager("memory.txt");
-            int numberOfOutputClasses = 2; // Количество наших классов
-            int[] neuronByLayer = new[] { 20, 13, numberOfOutputClasses };
-            int receptors = 26;
+            int numberOfOutputClasses = 13; // Количество наших классов
+            int[] neuronByLayer = new[] { 45, 23, numberOfOutputClasses };
+            int receptors = 69;
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
             // * Vectorizing words:
-            // Vectorize();
+            Vectorize();
 
             // Train network:
-            //TrainNet(receptors, numberOfOutputClasses);
+            TrainNet(receptors, numberOfOutputClasses);
 
             #region Testing
 
-            double[] inputVector = new double[0];
+            //double[] inputVector = new double[0];
 
-            using (StreamReader fileReader = new StreamReader("inputDataTest1.txt"))
-            {
-                while (!fileReader.EndOfStream)
-                {
-                    string[] readedData = fileReader.ReadLine().Split(' ');
-                    inputVector = new double[readedData.Length - 2];
+            //using (StreamReader fileReader = new StreamReader("inputDataTest0.txt"))
+            //{
+            //    while (!fileReader.EndOfStream)
+            //    {
+            //        string[] readedData = fileReader.ReadLine().Split(' ');
+            //        inputVector = new double[readedData.Length - 2];
 
-                    for (int i = 0; i < readedData.Length - 3; i++)
-                    {
-                        inputVector[i] = double.Parse(readedData[i + 1]);
-                    }
-                }
-            }
+            //        for (int i = 0; i < readedData.Length - 3; i++)
+            //        {
+            //            inputVector[i] = double.Parse(readedData[i + 1]);
+            //        }
+            //    }
+            //}
 
-            double[] outputVector = _net.Handle(inputVector);
+            //double[] outputVector = _net.Handle(inputVector);
 
             #endregion
             

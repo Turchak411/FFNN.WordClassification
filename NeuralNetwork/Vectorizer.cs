@@ -103,16 +103,14 @@ namespace NeuralNetwork
 
         private static double[] GetWordVector(string wordText)
         {
-            double[] alphabetEN = new Double[26];
-            //int[] alphabetRU = new Int32[32];
-            //int[] alphabet = new Int32[alphabetEN.Length + alphabetRU.Length];
+            double[] alphabet = new Double[69]; // EN + RU + numbers (может еще добавить знаки '-' и т.д.)
 
             for (int i = 0; i < wordText.Length; i++)
             {
-                alphabetEN = GetCharVector(wordText[i], alphabetEN);
+                alphabet = GetCharVector(wordText[i], alphabet);
             }
 
-            return alphabetEN;
+            return alphabet;
         }
 
         private static double[] GetCharVector(char textChar, double[] charVector)
@@ -196,6 +194,135 @@ namespace NeuralNetwork
                     break;
                 case 'z':
                     charVector[25]++;
+                    break;
+                case 'а':
+                    charVector[26]++;
+                    break;
+                case 'б':
+                    charVector[27]++;
+                    break;
+                case 'в':
+                    charVector[28]++;
+                    break;
+                case 'г':
+                    charVector[29]++;
+                    break;
+                case 'д':
+                    charVector[30]++;
+                    break;
+                case 'е':
+                    charVector[31]++;
+                    break;
+                case 'ё':
+                    charVector[32]++;
+                    break;
+                case 'ж':
+                    charVector[33]++;
+                    break;
+                case 'з':
+                    charVector[34]++;
+                    break;
+                case 'и':
+                    charVector[35]++;
+                    break;
+                case 'й':
+                    charVector[36]++;
+                    break;
+                case 'к':
+                    charVector[37]++;
+                    break;
+                case 'л':
+                    charVector[38]++;
+                    break;
+                case 'м':
+                    charVector[39]++;
+                    break;
+                case 'н':
+                    charVector[40]++;
+                    break;
+                case 'о':
+                    charVector[41]++;
+                    break;
+                case 'п':
+                    charVector[42]++;
+                    break;
+                case 'р':
+                    charVector[43]++;
+                    break;
+                case 'с':
+                    charVector[44]++;
+                    break;
+                case 'т':
+                    charVector[45]++;
+                    break;
+                case 'у':
+                    charVector[46]++;
+                    break;
+                case 'ф':
+                    charVector[47]++;
+                    break;
+                case 'х':
+                    charVector[48]++;
+                    break;
+                case 'ц':
+                    charVector[49]++;
+                    break;
+                case 'ч':
+                    charVector[50]++;
+                    break;
+                case 'ш':
+                    charVector[51]++;
+                    break;
+                case 'щ':
+                    charVector[52]++;
+                    break;
+                case 'ъ':
+                    charVector[53]++;
+                    break;
+                case 'ы':
+                    charVector[54]++;
+                    break;
+                case 'ь':
+                    charVector[55]++;
+                    break;
+                case 'э':
+                    charVector[56]++;
+                    break;
+                case 'ю':
+                    charVector[57]++;
+                    break;
+                case 'я':
+                    charVector[58]++;
+                    break;
+                case '0':
+                    charVector[59]++;
+                    break;
+                case '1':
+                    charVector[60]++;
+                    break;
+                case '2':
+                    charVector[61]++;
+                    break;
+                case '3':
+                    charVector[62]++;
+                    break;
+                case '4':
+                    charVector[63]++;
+                    break;
+                case '5':
+                    charVector[64]++;
+                    break;
+                case '6':
+                    charVector[65]++;
+                    break;
+                case '7':
+                    charVector[66]++;
+                    break;
+                case '8':
+                    charVector[67]++;
+                    break;
+                case '9':
+                    charVector[68]++;
                     break;
                 default:
                     break;
