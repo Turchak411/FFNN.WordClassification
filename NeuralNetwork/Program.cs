@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace NeuralNetwork
 {
@@ -10,17 +8,54 @@ namespace NeuralNetwork
     {
         private static NeuralNetwork _net;
         private static FileManager _fileManager;
+        private static Vectorizer _vectorizer;
 
         static void Main(string[] args)
         {
             _fileManager = new FileManager("memory.txt");
-            int numberOfOutputClasses = 13; // Количество наших классов
-            int[] neuronByLayer = new[] { 100, 65, numberOfOutputClasses };
-            int receptors = 200;
+            int numberOfOutputClasses = 2; // Количество наших классов
+            int[] neuronByLayer = new[] { 20, 13, numberOfOutputClasses };
+            int receptors = 26;
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
+            // * Vectorizing words:
+            // Vectorize();
+
             // Train network:
-            TrainNet(receptors, numberOfOutputClasses);
+            //TrainNet(receptors, numberOfOutputClasses);
+
+            #region Testing
+
+            double[] inputVector = new double[0];
+
+            using (StreamReader fileReader = new StreamReader("inputDataTest1.txt"))
+            {
+                while (!fileReader.EndOfStream)
+                {
+                    string[] readedData = fileReader.ReadLine().Split(' ');
+                    inputVector = new double[readedData.Length - 2];
+
+                    for (int i = 0; i < readedData.Length - 3; i++)
+                    {
+                        inputVector[i] = double.Parse(readedData[i + 1]);
+                    }
+                }
+            }
+
+            double[] outputVector = _net.Handle(inputVector);
+
+            #endregion
+            
+            Console.ReadKey();
+        }
+
+        private static void Vectorize()
+        {
+            string trainDataFolder = "data";
+            string outputDataFolder = "vectorizedData";
+
+            _vectorizer = new Vectorizer();
+            _vectorizer.Vectorizing(trainDataFolder, outputDataFolder);
         }
 
         private static void TrainNet(int receptors, int numberOfOutputClasses)
@@ -30,8 +65,9 @@ namespace NeuralNetwork
             #region Preparing learning INPUT SETS
 
             List<double[]> inputDataSets = new List<double[]>();
-            WordVectorLoader vectorLoader = new WordVectorLoader("data");
+            WordVectorLoader vectorLoader = new WordVectorLoader("vectorizedData");
 
+            Console.WriteLine("Load vectors data...");
             inputDataSets = vectorLoader.LoadVectorsData(receptors);
 
             #endregion
@@ -40,6 +76,7 @@ namespace NeuralNetwork
 
             #region Preparing learning OUTPUT SETS (ANWSERS)
 
+            Console.WriteLine("Load output sets...");
             List<double[]> outputDataSets = vectorLoader.LoadOutputSets(numberOfOutputClasses);
 
             #endregion
@@ -54,7 +91,7 @@ namespace NeuralNetwork
 
             try
             {
-                for (int i = 0; i < 420000; i++)
+                for (int i = 0; i < 15000; i++) //420000; i++)
                 {
                     // Calculating learn-speed rate:
                     learningSpeed = 0.01 * Math.Pow(0.1, i / 150000);

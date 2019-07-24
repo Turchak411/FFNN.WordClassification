@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NeuralNetwork
 {
@@ -28,21 +24,21 @@ namespace NeuralNetwork
             {
                 double[] inputDataSet = new double[receptors];
 
-                using (StreamReader fileReader = new StreamReader(_dataFolderPath + "//" + trainFiles[i]))
+                using (StreamReader fileReader = new StreamReader(trainFiles[i]))
                 {
                     while (!fileReader.EndOfStream)
                     {
                         string[] readedWordData = fileReader.ReadLine().Split(' ');
 
                         // Initial 'j' = 0 -> without string-word
-                        for (int j = 1; j < readedWordData.Length; j++)
+                        for (int j = 0; j < readedWordData.Length - 3; j++)
                         {
-                            inputDataSet[j] = double.Parse(readedWordData[j]);
+                            inputDataSet[j] = double.Parse(readedWordData[j + 1]);
                         }
+
+                        inputDataSets.Add(inputDataSet);
                     }
                 }
-
-                inputDataSets.Add(inputDataSet);
             }
 
             return inputDataSets;
@@ -56,12 +52,12 @@ namespace NeuralNetwork
 
             for (int i = 0; i < trainFiles.Length; i++)
             {
-                using (StreamReader fileReader = new StreamReader(_dataFolderPath + "//" + trainFiles[i]))
+                using (StreamReader fileReader = new StreamReader(trainFiles[i]))
                 {
                     double[] outputDataSet = new double[numberOfOutputClasses];
                     outputDataSet[i] = 1;
 
-                    for (int k = 0; k < System.IO.File.ReadAllLines(_dataFolderPath + "//" + trainFiles[i]).Length; k++)
+                    for (int k = 0; k < System.IO.File.ReadAllLines(trainFiles[i]).Length; k++)
                     {
                         outputDataSets.Add(outputDataSet);
                     }
