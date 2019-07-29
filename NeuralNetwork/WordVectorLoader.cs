@@ -34,7 +34,7 @@ namespace NeuralNetwork
                         string[] readedWordData = fileReader.ReadLine().Split(' ');
 
                         // Initial 'j' = 0 -> without string-word
-                        for (int j = 0; j < readedWordData.Length - 3; j++)
+                        for (int j = 0; j < readedWordData.Length - 2; j++)
                         {
                             inputDataSet[j] = double.Parse(readedWordData[j + 1]);
                         }

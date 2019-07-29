@@ -21,12 +21,12 @@ namespace NeuralNetwork
 
             _fileManager = new FileManager("memory.txt");
             int numberOfOutputClasses = 13; // Количество наших классов
-            int[] neuronByLayer = new[] { 70, 45, numberOfOutputClasses };
-            int receptors = 200;
+            int[] neuronByLayer = new[] { 45, 25, numberOfOutputClasses };
+            int receptors = 75;
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
             // * Vectorizing words:
-            // Vectorize();
+           // Vectorize();
 
             // Train network:
             TrainNet(receptors, numberOfOutputClasses);
