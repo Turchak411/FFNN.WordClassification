@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -17,11 +18,14 @@ namespace NeuralNetwork
             _dataFolderPath = dataFolderPath;
         }
 
-        public List<double[]> LoadVectorsData(int receptors)
+        public List<double[]> LoadVectorsData(int receptors, int numberOfOutputClasses, out List<double[]> outputDataSets)
         {
             string[] trainFiles = Directory.GetFiles(_dataFolderPath);
 
+            // Input vector list:
             List<double[]> inputDataSets = new List<double[]>();
+            // Output vector list:
+            outputDataSets = new List<double[]>();
 
             for (int i = 0; i < trainFiles.Length; i++)
             {
@@ -29,6 +33,9 @@ namespace NeuralNetwork
 
                 using (StreamReader fileReader = new StreamReader(trainFiles[i]))
                 {
+                    double[] outputDataSet = new double[numberOfOutputClasses];
+                    outputDataSet[i] = 1;
+
                     while (!fileReader.EndOfStream)
                     {
                         string[] readedWordData = fileReader.ReadLine().Split(' ');
@@ -40,42 +47,12 @@ namespace NeuralNetwork
                         }
 
                         inputDataSets.Add(inputDataSet);
+                        outputDataSets.Add(outputDataSet);
                     }
                 }
             }
 
             return inputDataSets;
-        }
-
-        public List<double[]> LoadOutputSets(int numberOfOutputClasses)
-        {
-            string[] trainFiles = Directory.GetFiles(_dataFolderPath);
-
-            List<double[]> outputDataSets = new List<double[]>();
-
-            for (int i = 0; i < trainFiles.Length; i++)
-            {
-                using (StreamReader fileReader = new StreamReader(trainFiles[i]))
-                {
-                    double[] outputDataSet = new double[numberOfOutputClasses];
-                    outputDataSet[i] = 1;
-
-                    Parallel.ForEach(File.ReadAllLines(trainFiles[i]),
-                        item =>
-                        {
-                            lock (sync)
-                            {
-                                outputDataSets.Add(outputDataSet);
-                            }
-                        });
-                    //for (int k = 0; k < File.ReadAllLines(trainFiles[i]).Length; k++)
-                    //{
-                    //    outputDataSets.Add(outputDataSet);
-                    //}
-                }
-            }
-
-            return outputDataSets;
         }
     }
 }
