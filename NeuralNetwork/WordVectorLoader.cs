@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NeuralNetwork
 {
     public class WordVectorLoader
     {
         private string _dataFolderPath;
+
+        private static object sync = new object();
 
         private WordVectorLoader() { }
 
@@ -57,10 +60,18 @@ namespace NeuralNetwork
                     double[] outputDataSet = new double[numberOfOutputClasses];
                     outputDataSet[i] = 1;
 
-                    for (int k = 0; k < System.IO.File.ReadAllLines(trainFiles[i]).Length; k++)
-                    {
-                        outputDataSets.Add(outputDataSet);
-                    }
+                    Parallel.ForEach(File.ReadAllLines(trainFiles[i]),
+                        item =>
+                        {
+                            lock (sync)
+                            {
+                                outputDataSets.Add(outputDataSet);
+                            }
+                        });
+                    //for (int k = 0; k < File.ReadAllLines(trainFiles[i]).Length; k++)
+                    //{
+                    //    outputDataSets.Add(outputDataSet);
+                    //}
                 }
             }
 
