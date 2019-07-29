@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NeuralNetwork
 {
@@ -10,42 +12,47 @@ namespace NeuralNetwork
         private static FileManager _fileManager;
         private static Vectorizer _vectorizer;
 
+        private static object sync = new object();
+
         static void Main(string[] args)
         {
+            Process thisProc = Process.GetCurrentProcess();
+            thisProc.PriorityClass = ProcessPriorityClass.High;
+
             _fileManager = new FileManager("memory.txt");
             int numberOfOutputClasses = 13; // Количество наших классов
-            int[] neuronByLayer = new[] { 45, 23, numberOfOutputClasses };
-            int receptors = 69;
+            int[] neuronByLayer = new[] { 70, 45, numberOfOutputClasses };
+            int receptors = 200;
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
             // * Vectorizing words:
-            Vectorize();
+            // Vectorize();
 
             // Train network:
             TrainNet(receptors, numberOfOutputClasses);
 
             #region Testing
 
-            //double[] inputVector = new double[0];
+            double[] inputVector = new double[0];
 
-            //using (StreamReader fileReader = new StreamReader("inputDataTest0.txt"))
-            //{
-            //    while (!fileReader.EndOfStream)
-            //    {
-            //        string[] readedData = fileReader.ReadLine().Split(' ');
-            //        inputVector = new double[readedData.Length - 2];
+            using (StreamReader fileReader = new StreamReader("inputDataTest.txt"))
+            {
+                while (!fileReader.EndOfStream)
+                {
+                    string[] readedData = fileReader.ReadLine().Split(' ');
+                    inputVector = new double[readedData.Length - 2];
 
-            //        for (int i = 0; i < readedData.Length - 3; i++)
-            //        {
-            //            inputVector[i] = double.Parse(readedData[i + 1]);
-            //        }
-            //    }
-            //}
+                    for (int i = 0; i < readedData.Length - 3; i++)
+                    {
+                        inputVector[i] = double.Parse(readedData[i + 1]);
+                    }
+                }
+            }
 
-            //double[] outputVector = _net.Handle(inputVector);
+            double[] outputVector = _net.Handle(inputVector);
 
             #endregion
-            
+
             Console.ReadKey();
         }
 
@@ -91,11 +98,25 @@ namespace NeuralNetwork
 
             try
             {
-                for (int i = 0; i < 15000; i++) //420000; i++)
+                for (int i = 0; i < 5; i++) //15000; i++) //420000; i++)
                 {
                     // Calculating learn-speed rate:
                     learningSpeed = 0.01 * Math.Pow(0.1, i / 150000);
 
+                    //int k = 0;
+
+                    //Parallel.ForEach(inputDataSets,
+                    //    item =>
+                    //    {
+                    //lock (sync)
+                    //{
+                    //_net.Handle(inputDataSets[k]);
+
+                    //_net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
+
+                    //k++;
+                    //    }
+                    //});
                     for (int k = 0; k < inputDataSets.Count; k++)
                     {
                         _net.Handle(inputDataSets[k]);
