@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace NeuralNetwork
+namespace NeuralNetwork.ServicesManager
 {
     public class WordVectorLoader
     {

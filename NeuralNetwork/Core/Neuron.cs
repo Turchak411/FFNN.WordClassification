@@ -1,6 +1,7 @@
 ﻿using System;
+using NeuralNetwork.ServicesManager;
 
-namespace NeuralNetwork
+namespace NeuralNetwork.Core
 {
     public class Neuron
     {

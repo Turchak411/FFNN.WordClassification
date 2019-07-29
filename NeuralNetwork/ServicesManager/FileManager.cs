@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace NeuralNetwork
+namespace NeuralNetwork.ServicesManager
 {
     public class FileManager
     {
