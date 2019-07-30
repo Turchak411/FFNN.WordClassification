@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using NeuralNetwork.Core;
+using NeuralNetwork.ServicesManager;
 
 namespace NeuralNetwork
 {

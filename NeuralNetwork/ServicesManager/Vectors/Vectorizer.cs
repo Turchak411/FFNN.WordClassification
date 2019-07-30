@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using System.Linq;
 
-namespace NeuralNetwork
+namespace NeuralNetwork.ServicesManager.Vectors
 {
     public class Vectorizer
     {
@@ -72,7 +71,7 @@ namespace NeuralNetwork
             {
                 ' ', '\t', '"', ',', '.', ':', ';', '!', '?', '«',
                 '»', '<', '>', '„', '“', '—', '(', ')', '_', '/', '=',
-                '\\', '`', '\n'
+                '\\', '`', '\n', '+'
             };
 
             string data;
@@ -129,7 +128,13 @@ namespace NeuralNetwork
             };
 
             // Увеличение значения у соответствующего символу элемента вектора:
-            charVector[charsArray.ToList().FindIndex(x => x == textChar)]++;
+            try
+            {
+                charVector[charsArray.ToList().FindIndex(x => x == textChar)]++;
+            }
+            catch
+            {
+            }
 
             return charVector;
         }

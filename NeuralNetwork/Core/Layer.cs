@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using NeuralNetwork.ServicesManager;
 
-namespace NeuralNetwork
+namespace NeuralNetwork.Core
 {
     public class Layer
     {
