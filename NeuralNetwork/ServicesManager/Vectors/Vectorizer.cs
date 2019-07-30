@@ -71,7 +71,7 @@ namespace NeuralNetwork.ServicesManager.Vectors
             {
                 ' ', '\t', '"', ',', '.', ':', ';', '!', '?', '«',
                 '»', '<', '>', '„', '“', '—', '(', ')', '_', '/', '=',
-                '\\', '`', '\n'
+                '\\', '`', '\n', '+'
             };
 
             string data;
@@ -128,7 +128,13 @@ namespace NeuralNetwork.ServicesManager.Vectors
             };
 
             // Увеличение значения у соответствующего символу элемента вектора:
-            charVector[charsArray.ToList().FindIndex(x => x == textChar)]++;
+            try
+            {
+                charVector[charsArray.ToList().FindIndex(x => x == textChar)]++;
+            }
+            catch
+            {
+            }
 
             return charVector;
         }

@@ -65,5 +65,25 @@ namespace NeuralNetwork.ServicesManager
             }
         }
 
+        public double[] ReadVector(string filePath)
+        {
+            double[] inputVector = new double[0];
+
+            using (StreamReader fileReader = new StreamReader(filePath))
+            {
+                while (!fileReader.EndOfStream)
+                {
+                    string[] readedData = fileReader.ReadLine().Split(' ');
+                    inputVector = new double[readedData.Length - 2];
+
+                    for (int i = 0; i < readedData.Length - 3; i++)
+                    {
+                        inputVector[i] = double.Parse(readedData[i + 1]);
+                    }
+                }
+            }
+
+            return inputVector;
+        }
     }
 }
