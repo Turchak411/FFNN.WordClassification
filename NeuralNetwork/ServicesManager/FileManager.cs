@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using NeuralNetwork.ServicesManager.Vectors;
 
-namespace NeuralNetwork
+namespace NeuralNetwork.ServicesManager
 {
     public class FileManager
     {
@@ -76,7 +78,7 @@ namespace NeuralNetwork
                     string[] readedData = fileReader.ReadLine().Split(' ');
                     inputVector = new double[readedData.Length - 2];
 
-                    for (int i = 0; i < readedData.Length - 3; i++)
+                    for (int i = 0; i < readedData.Length - 2; i++)
                     {
                         inputVector[i] = double.Parse(readedData[i + 1]);
                     }
@@ -84,6 +86,29 @@ namespace NeuralNetwork
             }
 
             return inputVector;
+        }
+
+
+        public List<Coeficent> ReadVectors(string filePath)
+        {
+            var vectors = new List<Coeficent>();
+            using (StreamReader fileReader = new StreamReader(filePath))
+            {
+                while (!fileReader.EndOfStream)
+                {
+                    var readedData = fileReader.ReadLine().Split(' ');
+                    var inputVector = new double[readedData.Length - 2];
+
+                    for (int i = 0; i < readedData.Length - 2; i++)
+                    {
+                        inputVector[i] = double.Parse(readedData[i + 1]);
+                    }
+
+                    vectors.Add(new Coeficent(readedData[0],inputVector));
+                }
+            }
+
+            return vectors;
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using System.Linq;
 
-namespace NeuralNetwork
+namespace NeuralNetwork.ServicesManager.Vectors
 {
     public class Vectorizer
     {

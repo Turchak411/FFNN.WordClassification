@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
+using NeuralNetwork.ServicesManager;
+using NeuralNetwork.ServicesManager.Vectors;
+using System.Text;
 
 namespace NeuralNetwork
 {
@@ -11,6 +12,8 @@ namespace NeuralNetwork
         private static NeuralNetwork _net;
         private static FileManager _fileManager;
         private static Vectorizer _vectorizer;
+
+        private static List<Coeficent> _coeficents;
 
         private static object sync = new object();
 
@@ -27,7 +30,7 @@ namespace NeuralNetwork
 
             // Initialize network:
             int numberOfOutputClasses = 13; // Количество наших классов
-            int[] neuronByLayer = new[] { 45, numberOfOutputClasses };
+            int[] neuronByLayer = new[] { 45,23, numberOfOutputClasses };
             int receptors = 75;
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
@@ -35,11 +38,25 @@ namespace NeuralNetwork
             //Vectorize();
 
             // Train network:
+            _coeficents = _fileManager.ReadVectors("inputDataTest.txt");
             TrainNet(receptors, numberOfOutputClasses);
 
             #region Testing
 
-            double[] inputVector = _fileManager.ReadVector("inputDataTest1.txt");
+            // Test();
+
+          
+
+                
+           
+            #endregion
+
+            Console.ReadKey();
+        }
+
+        private static void Test()
+        {
+            double[] inputVector = _fileManager.ReadVector("inputDataTest.txt");
 
             double[] outputVector = _net.Handle(inputVector);
 
@@ -49,9 +66,37 @@ namespace NeuralNetwork
             {
                 Console.WriteLine("{0} - {1:f3}", i, outputVector[i]);
             }
-            #endregion
+        }
 
-            Console.ReadKey();
+        private static void TestResult(List<Coeficent> testVectors, int iterartion)
+        {
+            // Console.Clear();
+            if (iterartion > 0) ClearLine(17);
+            var result = new StringBuilder();
+            result.Append($"\nИтерация обучения: {iterartion}\n");
+            testVectors.ForEach(vector => result.Append($"   {vector._word}     "));
+            result.Append('\n');
+            for (int k = 0; k < 13; k++)
+            {
+                foreach (var vector in testVectors)
+                {
+                    var outputVector = _net.Handle(vector._listFloat);
+                    result.Append($"{k} - {outputVector[k]:f3}\t");
+                }
+                result.Append('\n');
+            }
+
+            Console.WriteLine(result);
+        }
+
+        public static void ClearLine(int lines = 1)
+        {
+            for (int i = 1; i <= lines; i++)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+            }
         }
 
         private static void Vectorize()
@@ -85,26 +130,37 @@ namespace NeuralNetwork
 
             try
             {
-                for (int i = 0; i < 15; i++) //15000; i++) //420000; i++)
+                using (var progress = new ProgressBar())
                 {
-                    // Calculating learn-speed rate:
-                    learningSpeed = 0.01 * Math.Pow(0.1, i / 150000);
 
-                    for (int k = 0; k < inputDataSets.Count; k++)
+
+                    for (int i = 0; i < 100; i++) //15000; i++) //420000; i++)
                     {
-                        _net.Handle(inputDataSets[k]);
-                        _net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
-                    }
-                }
+                        // Calculating learn-speed rate:
+                        learningSpeed = 0.01 * Math.Pow(0.1, i / 150000);
 
-                // Save network memory:
-                _net.SaveMemory();
+                        for (int k = 0; k < inputDataSets.Count; k++)
+                        {
+                           
+                            _net.Handle(inputDataSets[k]);
+                            _net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
+                        }
+
+                        progress.Report((double)i / 100);
+                        TestResult(_coeficents, i);
+                    }
+
+                  
+
+                    // Save network memory:
+                    _net.SaveMemory();
+                }
 
                 Console.WriteLine("Training success!");
             }
-            catch
+            catch(Exception ex)
             {
-                Console.WriteLine("Training failed!");
+                Console.WriteLine("Training failed!" + ex.Message);
             }
 
             #endregion
