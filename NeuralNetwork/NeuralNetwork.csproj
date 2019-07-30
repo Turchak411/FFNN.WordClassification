@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\TeachNetwork.cs" />
     <Compile Include="ServicesManager\Vectors\Coeficient.cs" />
     <Compile Include="ServicesManager\FileManager.cs" />
     <Compile Include="Core\Layer.cs" />

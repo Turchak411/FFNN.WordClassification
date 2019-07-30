@@ -6,14 +6,11 @@ namespace NeuralNetwork.ServicesManager
 {
     public class FileManager
     {
-        private string _dataPath;
+        private readonly string _dataPath;
 
-        private FileManager() { }
+        public FileManager() { }
 
-        public FileManager(string dataPath)
-        {
-            _dataPath = dataPath;
-        }
+        public FileManager(string dataPath) => _dataPath = dataPath;
 
         public double[] LoadMemory(int layerNumber, int neuronNumber)
         {
