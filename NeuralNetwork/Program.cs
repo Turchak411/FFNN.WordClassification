@@ -12,6 +12,7 @@ namespace NeuralNetwork
         private static NeuralNetwork _net;
         private static FileManager _fileManager;
         private static Vectorizer _vectorizer;
+        private static Merger _merger;
 
         private static List<Coeficent> _coeficents;
 
@@ -119,6 +120,16 @@ namespace NeuralNetwork
 
             Console.WriteLine("Load input & output sets...");
             inputDataSets = vectorLoader.LoadVectorsData(receptors, numberOfOutputClasses, out outputDataSets);
+
+            #endregion
+
+            #region Vector merging
+
+            _merger = new Merger();
+            List<List<double[]>> list = _merger.MergeItems(inputDataSets, outputDataSets);
+
+            inputDataSets = list[0];
+            outputDataSets = list[1];
 
             #endregion
 
