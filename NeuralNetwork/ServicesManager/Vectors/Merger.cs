@@ -7,6 +7,8 @@ namespace NeuralNetwork.ServicesManager.Vectors
 {
     public class Merger
     {
+        private static object sync = new object();
+
         public List<List<double[]>> MergeItems(List<double[]> inputDataSets, List<double[]> outputDataSets)
         {
             List<double[]> newInputDataSets = new List<double[]>();
@@ -14,7 +16,6 @@ namespace NeuralNetwork.ServicesManager.Vectors
 
             // Все индексы слов, которые повторяются:
             List<int> repeatedWordsIndexes = new List<int>();
-            List<double[]> indexesList = new List<double[]>();
             int index;
 
             for(int i = 0; i < inputDataSets.Count; i++)
@@ -23,10 +24,7 @@ namespace NeuralNetwork.ServicesManager.Vectors
                 // Поиск индексов всех повторяющихся элементов:
                 while (index != -1)
                 {
-                   
-                    //index = FindLastIndex(inputDataSets, inputDataSets[i], i);
-           
-                     index = inputDataSets.FindIndex(inputDataSets[i],i);
+                    index = inputDataSets.FindIndex(inputDataSets[i], i);
 
                     if (index != -1 && index != i)  // Если что-то найдено и найденный элемент не является обрабатываемым
                     {
@@ -43,41 +41,33 @@ namespace NeuralNetwork.ServicesManager.Vectors
                 double[] outputVector = new Double[outputDataSets[0].Length];
                 if (repeatedWordsIndexes.Count != 0)
                 {
-                    outputVector = repeatedWordsIndexes.Aggregate(outputVector,
-                        (current, t) => VectorSum(current, outputDataSets[t]));
-                }
-
-                try
-                {
-                    outputVector = VectorSum(outputVector, outputDataSets[i]);
-
-                    if (repeatedWordsIndexes.Count == 0)
+                    for (int k = 0; k < repeatedWordsIndexes.Count; k++)
                     {
-                        Console.Write("");
+                        outputVector = VectorSum(outputVector, outputDataSets[repeatedWordsIndexes[k]]);
                     }
                 }
-                catch
-                {
-                    return new List<List<double[]>>() {newInputDataSets, newOutputDataSets};
-                }
+
+
+                //try
+                //{
+                outputVector = VectorSum(outputVector, outputDataSets[i]);
+                //}
+                //catch
+                //{
+                //    return new List<List<double[]>>() {newInputDataSets, newOutputDataSets};
+                //}
 
                 // Добавление уже уникального элемента в общии коллекции:
                 newInputDataSets.Add(inputDataSets[i]);
-                if (repeatedWordsIndexes.Count != 0)
-                {
-                    newOutputDataSets.Add(outputVector);
-                }
-                else
-                {
-                    newOutputDataSets.Add(outputDataSets[i]);
-                }
+                newOutputDataSets.Add(repeatedWordsIndexes.Count != 0 ? outputVector : outputDataSets[i]);
 
                 // Удаление повторяющихся элементов:
                 for (int c = 0; c < repeatedWordsIndexes.Count; c++)
                 {
-                    //inputDataSets.RemoveAt(repeatedWordsIndexes[c]);
                     outputDataSets.RemoveAt(repeatedWordsIndexes[c]);
                 }
+
+                repeatedWordsIndexes.Clear();
             }
 
             return new List<List<double[]>>() { newInputDataSets, newOutputDataSets };
