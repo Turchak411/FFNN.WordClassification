@@ -31,7 +31,7 @@ namespace NeuralNetwork
                 TestVectors = _fileManager.ReadVectors("inputDataTest.txt")
             };
 
-            networkTeacher.PreparingLearningData();
+            networkTeacher.PreparingLearningData(false);
 
             //networkTeacher.TrainNet();
 

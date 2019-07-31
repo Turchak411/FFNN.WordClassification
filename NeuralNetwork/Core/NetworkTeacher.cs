@@ -58,13 +58,17 @@ namespace NeuralNetwork.Core
             }
         }
 
-        public void PreparingLearningData()
+        public void PreparingLearningData(bool primaryLoad = true)
         {
             #region Load data from files
             var stopWatch = Stopwatch.StartNew();
-            var vectorLoader = new WordVectorLoader("vectorizedData");
+            var vectorLoader = new WordVectorLoader();
             Console.WriteLine("Load input & output sets...");
-            var inputDataSets = vectorLoader.LoadVectorsData(out var outputDataSets);
+
+            var inputDataSets = primaryLoad
+                ? vectorLoader.LoadVectorsData("vectorizedData", out var outputDataSets)
+                : vectorLoader.LoadSecondaryVectorsData("data", out  outputDataSets);
+
             ShowTime(stopWatch.Elapsed);
             #endregion
 
