@@ -119,7 +119,7 @@ namespace NeuralNetwork.ServicesManager
             {
                 dataSets.ForEach(dates =>
                 {
-                    foreach (var data in dates) sw.Write(data);
+                    foreach (var data in dates) sw.Write(data+ " ");
                     sw.WriteLine();
                 });
             }

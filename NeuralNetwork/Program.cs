@@ -33,7 +33,7 @@ namespace NeuralNetwork
 
             networkTeacher.PreparingLearningData();
 
-            networkTeacher.TrainNet();
+            //networkTeacher.TrainNet();
 
             Console.ReadKey();
         }

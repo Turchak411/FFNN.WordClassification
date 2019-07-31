@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Diagnostics;
 using NeuralNetwork.ServicesManager;
 using NeuralNetwork.ServicesManager.Vectors;
 
@@ -60,11 +61,11 @@ namespace NeuralNetwork.Core
         public void PreparingLearningData()
         {
             #region Load data from files
-
+            var stopWatch = Stopwatch.StartNew();
             var vectorLoader = new WordVectorLoader("vectorizedData");
             Console.WriteLine("Load input & output sets...");
             var inputDataSets = vectorLoader.LoadVectorsData(out var outputDataSets);
-
+            ShowTime(stopWatch.Elapsed);
             #endregion
 
             #region Vector merging
@@ -73,9 +74,13 @@ namespace NeuralNetwork.Core
             var list = _merger.MergeItems(inputDataSets, outputDataSets);
             _fileManager.SaveVectors(list[0], "inputSets.txt");
             _fileManager.SaveVectors(list[1],"outputSets.txt");
-
+            ShowTime(stopWatch.Elapsed);  stopWatch.Stop();
+            Console.WriteLine("Save result done!");
             #endregion
         }
+
+        private static void ShowTime(TimeSpan time) =>
+            Console.WriteLine($">>> Time interval: {time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds / 10:00} >>>");
 
         /// <summary>
         /// Обучение нейросети
@@ -104,7 +109,7 @@ namespace NeuralNetwork.Core
                             _net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
                         }
 
-                        progress.Report((double) iteration / 100);
+                        progress.Report((double) iteration / Iteration);
                         TestResult(TestVectors, iteration);
                     }
 

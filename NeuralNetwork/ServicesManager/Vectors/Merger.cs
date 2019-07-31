@@ -13,44 +13,48 @@ namespace NeuralNetwork.ServicesManager.Vectors
 
             // Все индексы слов, которые повторяются:
             var repeatedWordsIndexes = new List<int>();
-
-            for (int i = 0, index = 0; i < inputDataSets.Count; i++, index = 0)
+            using (var progressBar = new ProgressBar())
             {
-                // Поиск индексов всех повторяющихся элементов:
-                while (index != -1)
+                for (int i = 0, index = 0; i < inputDataSets.Count; i++, index = 0)
                 {
-                    index = inputDataSets.FindIndex(inputDataSets[i], i);
-
-                    // Если что-то найдено и найденный элемент не является обрабатываемым
-                    if (index != -1 && index != i)
+                    // Поиск индексов всех повторяющихся элементов:
+                    while (index != -1)
                     {
-                        repeatedWordsIndexes.Add(index);
-                        inputDataSets.RemoveAt(index);
+                        index = inputDataSets.FindIndex(inputDataSets[i], i);
+
+                        // Если что-то найдено и найденный элемент не является обрабатываемым
+                        if (index != -1 && index != i)
+                        {
+                            repeatedWordsIndexes.Add(index);
+                            inputDataSets.RemoveAt(index);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
+
+                    // Слияние выходных векторов всех найденых элементов:
+                    var outputVector = new double[outputDataSets[0].Length];
+                    if (repeatedWordsIndexes.Count != 0)
                     {
-                        break;
+                        outputVector = repeatedWordsIndexes.Aggregate(outputVector,
+                            (current, t) => current.VectorSum(outputDataSets[t]));
                     }
+
+                    // Добавление уже уникального элемента в общии коллекции:
+                    newInputDataSets.Add(inputDataSets[i]);
+                    newOutputDataSets.Add(repeatedWordsIndexes.Count != 0
+                        ? outputVector.VectorSum(outputDataSets[i]) : outputDataSets[i]);
+
+                    // Удаление повторяющихся элементов:
+                    foreach (var repeatedWordsIndex in repeatedWordsIndexes)
+                        outputDataSets.RemoveAt(repeatedWordsIndex);
+
+                    repeatedWordsIndexes.Clear();
+
+                    progressBar.Report((double)i / inputDataSets.Count);
                 }
-
-                // Слияние выходных векторов всех найденых элементов:
-                var outputVector = new double[outputDataSets[0].Length];
-                if (repeatedWordsIndexes.Count != 0)
-                {
-                    outputVector = repeatedWordsIndexes.Aggregate(outputVector,
-                        (current, t) => current.VectorSum(outputDataSets[t]));
-                }
-
-                // Добавление уже уникального элемента в общии коллекции:
-                newInputDataSets.Add(inputDataSets[i]);
-                newOutputDataSets.Add(repeatedWordsIndexes.Count != 0
-                    ? outputVector.VectorSum(outputDataSets[i]): outputDataSets[i]);
-
-                // Удаление повторяющихся элементов:
-                foreach (var repeatedWordsIndex in repeatedWordsIndexes)
-                    outputDataSets.RemoveAt(repeatedWordsIndex);
-  
-                repeatedWordsIndexes.Clear();
             }
 
             return new List<List<double[]>> { newInputDataSets, newOutputDataSets };

@@ -28,7 +28,7 @@ namespace NeuralNetwork.ServicesManager
 
             for (int i = 0; i < trainFiles.Length; i++)
             {
-                using (StreamReader fileReader = new StreamReader(trainFiles[i], Encoding.Default))
+                using (StreamReader fileReader = new StreamReader(trainFiles[i], Encoding.UTF8))
                 {
                     double[] outputDataSet = new double[trainFiles.Length];
                     outputDataSet[i] = 1;
