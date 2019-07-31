@@ -23,7 +23,7 @@ namespace NeuralNetwork
 
             const int receptors = 75;
             const int numberOfOutputClasses = 13; // Количество наших классов
-            int[] neuronByLayer = { 45,23, numberOfOutputClasses };
+            int[] neuronByLayer = { 45, 23, numberOfOutputClasses };
             _fileManager = new FileManager("memory.txt");
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
@@ -42,7 +42,7 @@ namespace NeuralNetwork
         /// Test neural network
         /// </summary>
         /// <param name="inputVector">Вектор для тестирования</param>
-        public void Test(double[] inputVector)
+        public static void Test(double[] inputVector)
         {
             var outputVector = _net.Handle(inputVector);
 

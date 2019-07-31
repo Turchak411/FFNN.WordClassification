@@ -18,7 +18,7 @@ namespace NeuralNetwork.ServicesManager
             _dataFolderPath = dataFolderPath;
         }
 
-        public List<double[]> LoadVectorsData(int receptors, int numberOfOutputClasses, out List<double[]> outputDataSets)
+        public List<double[]> LoadVectorsData(out List<double[]> outputDataSets)
         {
             // TODO: убрать лишние параметры
             string[] trainFiles = Directory.GetFiles(_dataFolderPath);
@@ -32,13 +32,13 @@ namespace NeuralNetwork.ServicesManager
             {
                 using (StreamReader fileReader = new StreamReader(trainFiles[i]))
                 {
-                    double[] outputDataSet = new double[numberOfOutputClasses];
+                    double[] outputDataSet = new double[trainFiles.Length];
                     outputDataSet[i] = 1;
 
                     while (!fileReader.EndOfStream)
                     {
-                        double[] inputDataSet = new double[receptors];
                         string[] readedWordData = fileReader.ReadLine().Split(' ');
+                        double[] inputDataSet = new double[readedWordData.Length - 2]; // without word and empty item in the end
 
                         // Initial 'j' = 0 -> without string-word
                         for (int j = 0; j < readedWordData.Length - 2; j++)

@@ -125,9 +125,27 @@ namespace NeuralNetwork.ServicesManager
             }
         }
 
-        public List<double[]> LoadDataSet()
+        public List<double[]> LoadDataSet(string path)
         {
+            List<double[]> sets = new List<double[]>();
 
+            using (StreamReader fileReader = new StreamReader(path))
+            {
+                while (!fileReader.EndOfStream)
+                {
+                    string[] readedLine = fileReader.ReadLine().Split(' ');
+                    double[] set = new double[readedLine.Length];
+
+                    for (int i = 0; i < readedLine.Length; i++)
+                    {
+                        set[i] = double.Parse(readedLine[i]);
+                    }
+
+                    sets.Add(set);
+                }
+            }
+
+            return sets;
         }
     }
 }
