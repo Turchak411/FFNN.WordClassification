@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using NeuralNetwork.Core;
 using NeuralNetwork.ServicesManager;
-using NeuralNetwork.ServicesManager.Vectors;
 
 namespace NeuralNetwork
 {
@@ -32,6 +30,8 @@ namespace NeuralNetwork
                 Iteration = 10,
                 TestVectors = _fileManager.ReadVectors("inputDataTest.txt")
             };
+
+            networkTeacher.PreparingLearningData();
 
             networkTeacher.TrainNet();
 

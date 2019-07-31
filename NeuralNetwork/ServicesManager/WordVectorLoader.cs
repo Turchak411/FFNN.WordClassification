@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace NeuralNetwork.ServicesManager
 {
@@ -20,7 +19,6 @@ namespace NeuralNetwork.ServicesManager
 
         public List<double[]> LoadVectorsData(out List<double[]> outputDataSets)
         {
-            // TODO: убрать лишние параметры
             string[] trainFiles = Directory.GetFiles(_dataFolderPath);
 
             // Input vector list:
@@ -30,7 +28,7 @@ namespace NeuralNetwork.ServicesManager
 
             for (int i = 0; i < trainFiles.Length; i++)
             {
-                using (StreamReader fileReader = new StreamReader(trainFiles[i]))
+                using (StreamReader fileReader = new StreamReader(trainFiles[i], Encoding.Default))
                 {
                     double[] outputDataSet = new double[trainFiles.Length];
                     outputDataSet[i] = 1;
@@ -38,7 +36,7 @@ namespace NeuralNetwork.ServicesManager
                     while (!fileReader.EndOfStream)
                     {
                         string[] readedWordData = fileReader.ReadLine().Split(' ');
-                        double[] inputDataSet = new double[readedWordData.Length - 2]; // without word and empty item in the end
+                        double[] inputDataSet = new double[readedWordData.Length - 2];
 
                         // Initial 'j' = 0 -> without string-word
                         for (int j = 0; j < readedWordData.Length - 2; j++)

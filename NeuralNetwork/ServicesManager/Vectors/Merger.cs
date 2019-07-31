@@ -6,8 +6,6 @@ namespace NeuralNetwork.ServicesManager.Vectors
 {
     public class Merger
     {
-        private static object sync = new object();
-
         public List<List<double[]>> MergeItems(List<double[]> inputDataSets, List<double[]> outputDataSets)
         {
             var newInputDataSets = new List<double[]>();
@@ -24,8 +22,7 @@ namespace NeuralNetwork.ServicesManager.Vectors
                     index = inputDataSets.FindIndex(inputDataSets[i], i);
 
                     // Если что-то найдено и найденный элемент не является обрабатываемым
-                    if (index != -1 && index != i) 
-
+                    if (index != -1 && index != i)
                     {
                         repeatedWordsIndexes.Add(index);
                         inputDataSets.RemoveAt(index);
