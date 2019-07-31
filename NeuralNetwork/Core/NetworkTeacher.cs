@@ -13,9 +13,6 @@ namespace NeuralNetwork.Core
 
         private NeuralNetwork _net;
 
-        private readonly int _receptors;
-        private readonly int _numberOfOutputClasses;
-
         public int Iteration { get; set; } = 20;
 
         public List<Coeficent> TestVectors { get; set; }
@@ -66,7 +63,7 @@ namespace NeuralNetwork.Core
 
             var vectorLoader = new WordVectorLoader("vectorizedData");
             Console.WriteLine("Load input & output sets...");
-            var inputDataSets = vectorLoader.LoadVectorsData(_receptors, _numberOfOutputClasses, out var outputDataSets);
+            var inputDataSets = vectorLoader.LoadVectorsData(out var outputDataSets);
 
             #endregion
 
@@ -87,8 +84,8 @@ namespace NeuralNetwork.Core
         {
             #region Load data from file
 
-
-            LoadSets();
+            List<double[]> inputDataSets = _fileManager.LoadDataSet("inputSets.txt");
+            List<double[]> outputDataSets = _fileManager.LoadDataSet("outputSets.txt");
 
             #endregion
 
