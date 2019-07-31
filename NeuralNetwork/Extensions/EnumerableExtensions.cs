@@ -21,7 +21,16 @@ namespace NeuralNetwork.Extensions
             return enumerator.MoveNext() && enumerator.MoveNext();
         }
 
-       
+        public static double[] VectorSum(this IEnumerable<double> vector1, IEnumerable<double> vector2)
+        {
+            var array1 = vector1 as double[] ?? vector1.ToArray();
+            var array2 = vector2 as double[] ?? vector2.ToArray();
+
+            for (var i = 0; i < array1.Count(); i++) array1[i] += array2[i];
+
+            return array1;
+        }
+
         public static int FindIndex(this IEnumerable<double[]> items1, double[] items2, int itemsIndex)
         {
             var enumerable = items1 as double[][] ?? items1.ToArray();
