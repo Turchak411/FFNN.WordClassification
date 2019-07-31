@@ -7,7 +7,7 @@ namespace NeuralNetwork
     public class NeuralNetwork
     {
         protected List<Layer> _layerList = new List<Layer>();
-        private FileManager _fileManager;
+        private readonly FileManager _fileManager;
 
         protected NeuralNetwork() { }
 

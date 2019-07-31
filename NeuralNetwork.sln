@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28306.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetwork", "NeuralNetwork\NeuralNetwork.csproj", "{A9CFD43B-07DE-43D4-8C52-99AD78E16A4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeightsGenerator", "..\..\..\Documents\Visual Studio 2017\Project1\WeightsGenerator-master\WeightsGenerator-master\WeightsGenerator\WeightsGenerator.csproj", "{4C17B48A-01C5-4578-AB2B-6AB58D466C21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeightsGenerator", "WeightsGenerator\WeightsGenerator.csproj", "{4C17B48A-01C5-4578-AB2B-6AB58D466C21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
