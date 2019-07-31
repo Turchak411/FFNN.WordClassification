@@ -29,8 +29,6 @@ namespace NeuralNetwork.ServicesManager
 
             for (int i = 0; i < trainFiles.Length; i++)
             {
-                double[] inputDataSet = new double[receptors];
-
                 using (StreamReader fileReader = new StreamReader(trainFiles[i]))
                 {
                     double[] outputDataSet = new double[numberOfOutputClasses];
@@ -38,6 +36,7 @@ namespace NeuralNetwork.ServicesManager
 
                     while (!fileReader.EndOfStream)
                     {
+                        double[] inputDataSet = new double[receptors];
                         string[] readedWordData = fileReader.ReadLine().Split(' ');
 
                         // Initial 'j' = 0 -> without string-word

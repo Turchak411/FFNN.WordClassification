@@ -8,7 +8,7 @@ namespace NeuralNetwork
 {
     static class Program
     {
-      
+
         static void Main(string[] args)
         {
             #region Set process settings
@@ -45,7 +45,5 @@ namespace NeuralNetwork
             _vectorizer = new Vectorizer();
             _vectorizer.Vectorizing(trainDataFolder, outputDataFolder);
         }
-
-     
     }
 }
