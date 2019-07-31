@@ -70,9 +70,9 @@ namespace NeuralNetwork.Core
             #region Vector merging
 
             _merger = new Merger();
-            List<List<double[]>> list = _merger.MergeItems(inputDataSets, outputDataSets);
-            inputDataSets = list[0];
-            outputDataSets = list[1];
+            var list = _merger.MergeItems(inputDataSets, outputDataSets);
+            _fileManager.SaveVectors(list[0], "inputSets.txt");
+            _fileManager.SaveVectors(list[1],"outputSets.txt");
 
             #endregion
         }

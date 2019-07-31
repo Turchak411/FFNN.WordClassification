@@ -108,6 +108,23 @@ namespace NeuralNetwork.ServicesManager
             return vectors;
         }
 
+        /// <summary>
+        /// Сохранение векторов из dataSets
+        /// </summary>
+        /// <param name="dataSets">dataSets</param>
+        /// <param name="path">Путь к файлу</param>
+        public void SaveVectors(List<double[]> dataSets, string path)
+        {
+            using (var sw = new StreamWriter(path))
+            {
+                dataSets.ForEach(dates =>
+                {
+                    foreach (var data in dates) sw.Write(data);
+                    sw.WriteLine();
+                });
+            }
+        }
+
         public List<double[]> LoadDataSet(string path)
         {
             List<double[]> sets = new List<double[]>();
