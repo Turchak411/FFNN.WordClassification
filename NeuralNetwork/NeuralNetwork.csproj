@@ -44,6 +44,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="ServicesManager\Vectors\Coeficient.cs" />
     <Compile Include="ServicesManager\FileManager.cs" />
     <Compile Include="Core\Layer.cs" />
