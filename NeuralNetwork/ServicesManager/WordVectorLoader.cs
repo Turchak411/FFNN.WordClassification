@@ -20,6 +20,7 @@ namespace NeuralNetwork.ServicesManager
 
         public List<double[]> LoadVectorsData(int receptors, int numberOfOutputClasses, out List<double[]> outputDataSets)
         {
+            // TODO: убрать лишние параметры
             string[] trainFiles = Directory.GetFiles(_dataFolderPath);
 
             // Input vector list:

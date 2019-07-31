@@ -6,9 +6,12 @@ using NeuralNetwork.ServicesManager.Vectors;
 
 namespace NeuralNetwork.Core
 {
-    public class TeachNetwork
+    public class NetworkTeacher
     {
-        private readonly NeuralNetwork _net;
+        private Merger _merger;
+        private FileManager _fileManager;
+
+        private NeuralNetwork _net;
 
         private readonly int _receptors;
         private readonly int _numberOfOutputClasses;
@@ -17,30 +20,10 @@ namespace NeuralNetwork.Core
 
         public List<Coeficent> TestVectors { get; set; }
 
-      
-
-        public TeachNetwork(int receptors, int numberOfOutputClasses, int[] neuronByLayer, string memoryPath)
+        public NetworkTeacher(NeuralNetwork net, FileManager fileManager)
         {
-            _receptors = receptors;
-            _numberOfOutputClasses = numberOfOutputClasses;
-            _net = new NeuralNetwork(neuronByLayer, receptors, new FileManager(memoryPath));
-        }
-
-        /// <summary>
-        /// Test neural network
-        /// </summary>
-        /// <param name="inputVector">Вектор для тестирования</param>
-        public void Test(double[] inputVector)
-        {
-            var outputVector = _net.Handle(inputVector);
-
-            // Print result vector:
-            Console.WriteLine("[Neuron] - [Activated value]");
-
-            for (int i = 0; i < outputVector.Length; i++)
-            {
-                Console.WriteLine("{0} - {1:f3}", i, outputVector[i]);
-            }
+            _net = net;
+            _fileManager = fileManager;
         }
 
         public void TestResult(List<Coeficent> testVectors, int iteration)
@@ -77,12 +60,9 @@ namespace NeuralNetwork.Core
             }
         }
 
-        /// <summary>
-        /// Обучение нейросети
-        /// </summary>
-        public void TrainNet()
+        public void PreparingLearningData()
         {
-            #region Preparing learning DATA
+            #region Load data from files
 
             var vectorLoader = new WordVectorLoader("vectorizedData");
             Console.WriteLine("Load input & output sets...");
@@ -90,7 +70,27 @@ namespace NeuralNetwork.Core
 
             #endregion
 
-            #region Net training
+            #region Vector merging
+
+            _merger = new Merger();
+            List<List<double[]>> list = _merger.MergeItems(inputDataSets, outputDataSets);
+            inputDataSets = list[0];
+            outputDataSets = list[1];
+
+            #endregion
+        }
+
+        /// <summary>
+        /// Обучение нейросети
+        /// </summary>
+        public void TrainNet()
+        {
+            #region Load data from file
+
+
+            LoadSets();
+
+            #endregion
 
             Console.WriteLine("Training net...");
             try
@@ -119,10 +119,8 @@ namespace NeuralNetwork.Core
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Training failed!" + ex.Message);
+                Console.WriteLine("Training failed! " + ex.Message);
             }
-
-            #endregion
         }
     }
 }

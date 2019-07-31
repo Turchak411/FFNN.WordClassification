@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Core\TeachNetwork.cs" />
+    <Compile Include="Core\NetworkTeacher.cs" />
     <Compile Include="ServicesManager\Vectors\Coeficient.cs" />
     <Compile Include="ServicesManager\FileManager.cs" />
     <Compile Include="Core\Layer.cs" />

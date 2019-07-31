@@ -107,5 +107,10 @@ namespace NeuralNetwork.ServicesManager
 
             return vectors;
         }
+
+        public List<double[]> LoadDataSet()
+        {
+
+        }
     }
 }
