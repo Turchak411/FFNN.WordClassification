@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NeuralNetwork.Extensions;
 
 namespace NeuralNetwork.ServicesManager.Vectors
 {
@@ -22,8 +23,10 @@ namespace NeuralNetwork.ServicesManager.Vectors
                 // Поиск индексов всех повторяющихся элементов:
                 while (index != -1)
                 {
-                    //index = inputDataSets.FindIndex(i + 1, x => x == inputDataSets[i]);
-                    index = FindLastIndex(inputDataSets, inputDataSets[i], i);
+                   
+                    //index = FindLastIndex(inputDataSets, inputDataSets[i], i);
+           
+                     index = inputDataSets.FindIndex(inputDataSets[i],i);
 
                     if (index != -1 && index != i)  // Если что-то найдено и найденный элемент не является обрабатываемым
                     {
@@ -40,10 +43,8 @@ namespace NeuralNetwork.ServicesManager.Vectors
                 double[] outputVector = new Double[outputDataSets[0].Length];
                 if (repeatedWordsIndexes.Count != 0)
                 {
-                    for (int k = 0; k < repeatedWordsIndexes.Count; k++)
-                    {
-                        outputVector = VectorSum(outputVector, outputDataSets[repeatedWordsIndexes[k]]);
-                    }
+                    outputVector = repeatedWordsIndexes.Aggregate(outputVector,
+                        (current, t) => VectorSum(current, outputDataSets[t]));
                 }
 
                 try
