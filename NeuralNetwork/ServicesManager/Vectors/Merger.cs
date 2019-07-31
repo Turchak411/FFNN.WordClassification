@@ -6,6 +6,8 @@ namespace NeuralNetwork.ServicesManager.Vectors
 {
     public class Merger
     {
+        private static object sync = new object();
+
         public List<List<double[]>> MergeItems(List<double[]> inputDataSets, List<double[]> outputDataSets)
         {
             var newInputDataSets = new List<double[]>();
@@ -14,17 +16,16 @@ namespace NeuralNetwork.ServicesManager.Vectors
             // Все индексы слов, которые повторяются:
             var repeatedWordsIndexes = new List<int>();
 
-
             for (int i = 0, index = 0; i < inputDataSets.Count; i++, index = 0)
             {
                 // Поиск индексов всех повторяющихся элементов:
-
                 while (index != -1)
                 {
                     index = inputDataSets.FindIndex(inputDataSets[i], i);
-                    
+
                     // Если что-то найдено и найденный элемент не является обрабатываемым
                     if (index != -1 && index != i) 
+
                     {
                         repeatedWordsIndexes.Add(index);
                         inputDataSets.RemoveAt(index);
@@ -51,7 +52,7 @@ namespace NeuralNetwork.ServicesManager.Vectors
                 // Удаление повторяющихся элементов:
                 foreach (var repeatedWordsIndex in repeatedWordsIndexes)
                     outputDataSets.RemoveAt(repeatedWordsIndex);
-
+  
                 repeatedWordsIndexes.Clear();
             }
 
