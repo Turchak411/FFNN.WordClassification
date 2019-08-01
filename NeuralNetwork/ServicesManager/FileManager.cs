@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using NeuralNetwork.ServicesManager.Vectors;
 
@@ -10,7 +11,8 @@ namespace NeuralNetwork.ServicesManager
 
         public FileManager() { }
 
-        public FileManager(string dataPath) => _dataPath = dataPath;
+        public FileManager(string dataPath) =>
+            _dataPath = File.Exists(dataPath) ? _dataPath = dataPath : throw new Exception("Отсутствуеn файл памяти сети!");
 
         public double[] LoadMemory(int layerNumber, int neuronNumber)
         {
@@ -88,6 +90,11 @@ namespace NeuralNetwork.ServicesManager
 
         public List<Coeficent> ReadVectors(string filePath)
         {
+            if (!File.Exists(filePath))
+            {
+                return null;
+            }
+
             var vectors = new List<Coeficent>();
             using (StreamReader fileReader = new StreamReader(filePath))
             {

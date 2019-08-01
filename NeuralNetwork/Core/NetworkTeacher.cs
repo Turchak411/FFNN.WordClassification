@@ -24,14 +24,19 @@ namespace NeuralNetwork.Core
             _fileManager = fileManager;
         }
 
-        public void TestResult(List<Coeficent> testVectors, int iteration)
+        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration)
         {
+            if (testVectors != null)
+            {
+                return;
+            }
+
             if (iteration > 0) ClearLine(17);
             var result = new StringBuilder();
             result.Append($"\nИтерация обучения: {iteration}\n");
             testVectors.ForEach(vector => result.Append($"   {vector._word}     "));
             result.Append('\n');
-            for (int k = 0; k < 13; k++)
+            for (int k = 0; k < outputSetLength; k++)
             {
                 foreach (var vector in testVectors)
                 {
@@ -114,7 +119,7 @@ namespace NeuralNetwork.Core
                         }
 
                         progress.Report((double) iteration / Iteration);
-                        TestResult(TestVectors, iteration);
+                        TestResult(TestVectors, outputDataSets[0].Length, iteration);
                     }
 
                     // Save network memory:
