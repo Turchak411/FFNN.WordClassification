@@ -11,7 +11,17 @@ namespace VectorCorrector
     {
         private string _filePath;
 
-        public FileManager(string filePath = "outputSets.txt") => _filePath = filePath;
+        public FileManager(string filePath = "outputSets.txt")
+        {
+            if (File.Exists(filePath))
+            {
+                _filePath = filePath;
+            }
+            else
+            {
+                throw new Exception("Отсутсвует файл " + filePath);
+            }
+        }
 
         public List<double[]> Load()
         {
@@ -44,8 +54,10 @@ namespace VectorCorrector
                 {
                     for (int i = 0; i < vector.Length; i++)
                     {
-                        fileWriter.WriteLine(vector[i] + " ");
+                        fileWriter.Write(vector[i] + " ");
                     }
+
+                    fileWriter.WriteLine();
                 }
             }
         }
