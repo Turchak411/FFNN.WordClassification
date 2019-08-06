@@ -21,19 +21,19 @@ namespace NeuralNetwork
 
             const int receptors = 75;
             const int numberOfOutputClasses = 13; // Количество наших классов
-            int[] neuronByLayer = { 45, 23, numberOfOutputClasses };
+            int[] neuronByLayer = { 90, 75, numberOfOutputClasses };
             _fileManager = new FileManager("memory.txt");
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
             var networkTeacher = new NetworkTeacher(_net, _fileManager)
             {
-                Iteration = 10,
+                Iteration = 100,
                 TestVectors = _fileManager.ReadVectors("inputDataTest.txt")
             };
 
-            networkTeacher.PreparingLearningData(false);
+            //networkTeacher.PreparingLearningData(false);
 
-            //networkTeacher.TrainNet();
+            networkTeacher.TrainNet();
 
             Console.ReadKey();
         }

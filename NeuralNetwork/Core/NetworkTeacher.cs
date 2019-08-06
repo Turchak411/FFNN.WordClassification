@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using NeuralNetwork.ServicesManager;
 using NeuralNetwork.ServicesManager.Vectors;
 
@@ -26,7 +27,7 @@ namespace NeuralNetwork.Core
 
         public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration)
         {
-            if (testVectors != null)
+            if (testVectors == null)
             {
                 return;
             }
@@ -101,6 +102,27 @@ namespace NeuralNetwork.Core
             List<double[]> inputDataSets = _fileManager.LoadDataSet("inputSets.txt");
             List<double[]> outputDataSets = _fileManager.LoadDataSet("outputSets.txt");
 
+            //Console.WriteLine("Sort starting...");
+            
+            //Random rnd = new Random();
+
+            //for (int i = 0; i < inputDataSets.Count; i++)
+            //{
+            //    double[] tempInput = inputDataSets[0];
+            //    double[] tempOutput = outputDataSets[0];
+            //    inputDataSets.RemoveAt(0);
+            //    outputDataSets.RemoveAt(0);
+
+            //    int rndIndex = rnd.Next(inputDataSets.Count);
+
+            //    inputDataSets.Insert(rndIndex, tempInput);
+            //    outputDataSets.Insert(rndIndex, tempOutput);
+            //}
+
+            //Console.WriteLine("Sorted sets saving...");
+            //_fileManager.SaveVectors(inputDataSets, "inputSet_sorted.txt");
+            //_fileManager.SaveVectors(outputDataSets, "outputSet_sorted.txt");
+
             #endregion
 
             Console.WriteLine("Training net...");
@@ -112,10 +134,15 @@ namespace NeuralNetwork.Core
                     {
                         // Calculating learn-speed rate:
                         var learningSpeed = 0.01 * Math.Pow(0.1, iteration / 150000);
-                        for (int k = 0; k < inputDataSets.Count; k++)
+                        using (var progress1 = new ProgressBar())
                         {
-                            _net.Handle(inputDataSets[k]);
-                            _net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
+                            for (int k = 0; k < 10000; k++)
+                            {
+                                _net.Handle(inputDataSets[k]);
+                                _net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
+                                progress1.Report((double)k / inputDataSets.Count);
+                            }
+                           
                         }
 
                         progress.Report((double) iteration / Iteration);
