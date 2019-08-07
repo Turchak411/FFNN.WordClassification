@@ -1,26 +1,61 @@
-﻿using System;
+﻿using System.IO;
+using System.Text;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace NeuralNetwork.ServicesManager
 {
     public class WordVectorLoader
     {
-        private string _dataFolderPath;
-
-        private static object sync = new object();
-
-        private WordVectorLoader() { }
-
-        public WordVectorLoader(string dataFolderPath)
+        public List<double[]> LoadSecondaryVectorsData(string dataFolderPath, out List<double[]> outputDataSets)
         {
-            _dataFolderPath = dataFolderPath;
+               outputDataSets = new List<double[]>();
+            var inputDataSets = new List<double[]>();
+            var dataSetsDirectories = Directory.GetDirectories(dataFolderPath);
+
+            foreach (var directories in dataSetsDirectories)
+            {
+                var dataSetsFiles = Directory.GetFiles(directories);
+
+                foreach (var file in dataSetsFiles)
+                {
+                    if (Path.GetFileName(file) == "inputSets.txt")
+                    {
+                        inputDataSets.AddRange(ReadDataSets(file));
+                    }
+                    else if (Path.GetFileName(file) == "outputSets.txt")
+                    {
+                        outputDataSets.AddRange(ReadDataSets(file));
+                    }
+                }
+            }
+
+            return inputDataSets;
         }
 
-        public List<double[]> LoadVectorsData(int receptors, int numberOfOutputClasses, out List<double[]> outputDataSets)
+        private IEnumerable<double[]> ReadDataSets(string path)
         {
-            string[] trainFiles = Directory.GetFiles(_dataFolderPath);
+            var dataSetsList = new List<double[]>();
+            using (var fileReader = new StreamReader(path, Encoding.UTF8))
+            {
+                while (!fileReader.EndOfStream)
+                {
+                    var str = fileReader.ReadLine()?.Split();
+                    var dataSets = new double[str.Length-1];
+                    for (int i = 0; i < str.Length-1; i++)
+                    {
+                        dataSets[i] = double.Parse(str[i]);
+                    }
+
+                    dataSetsList.Add(dataSets);
+                }
+            }
+
+            return dataSetsList;
+        }
+
+        public List<double[]> LoadVectorsData(string dataFolderPath, out List<double[]> outputDataSets)
+        {
+            string[] trainFiles = Directory.GetFiles(dataFolderPath);
 
             // Input vector list:
             List<double[]> inputDataSets = new List<double[]>();
@@ -29,15 +64,15 @@ namespace NeuralNetwork.ServicesManager
 
             for (int i = 0; i < trainFiles.Length; i++)
             {
-                using (StreamReader fileReader = new StreamReader(trainFiles[i]))
+                using (StreamReader fileReader = new StreamReader(trainFiles[i], Encoding.UTF8))
                 {
-                    double[] outputDataSet = new double[numberOfOutputClasses];
+                    double[] outputDataSet = new double[trainFiles.Length];
                     outputDataSet[i] = 1;
 
                     while (!fileReader.EndOfStream)
                     {
-                        double[] inputDataSet = new double[receptors];
                         string[] readedWordData = fileReader.ReadLine().Split(' ');
+                        double[] inputDataSet = new double[readedWordData.Length - 2];
 
                         // Initial 'j' = 0 -> without string-word
                         for (int j = 0; j < readedWordData.Length - 2; j++)
@@ -53,5 +88,36 @@ namespace NeuralNetwork.ServicesManager
 
             return inputDataSets;
         }
+
+        #region Overload mehtod LoadSecondaryVectorsData
+
+        public KeyValuePair<List<double[]>, List<double[]>> LoadSecondaryVectorsData(string dataFolderPath)
+        {
+            var inputDataSets = new List<double[]>();
+            var outputDataSets = new List<double[]>();
+
+            var dataSetsDirectories = Directory.GetDirectories(dataFolderPath);
+
+            foreach (var directories in dataSetsDirectories)
+            {
+                var dataSetsFiles = Directory.GetFiles(directories);
+
+                foreach (var file in dataSetsFiles)
+                {
+                    if (Path.GetFileName(file) == "inputSets.txt")
+                    {
+                        inputDataSets.AddRange(ReadDataSets(file));
+                    }
+                    else if (Path.GetFileName(file) == "outputSets.txt")
+                    {
+                        outputDataSets.AddRange(ReadDataSets(file));
+                    }
+                }
+            }
+
+            return new KeyValuePair<List<double[]>, List<double[]>>(inputDataSets, outputDataSets);
+        }
+
+        #endregion
     }
 }
