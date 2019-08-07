@@ -9,34 +9,22 @@ namespace VectorCorrector
     class Program
     {
         private static FileManager _fileManager;
+        private static VectorsCorrects _vectorsCorrects;
 
         static void Main(string[] args)
         {
-            var fileName = "outputSets.txt";
+            var fileName = "auto & economics\\outputSets.txt";
             _fileManager = new FileManager(fileName);
-
+            _vectorsCorrects = new VectorsCorrects();
             var vectors = _fileManager.Load();
 
-            CorrectVectors(vectors);
-
-            _fileManager.Save(vectors);
+            //_vectorsCorrects.CorrectVectors(ref vectors);
+             var resultVectors = _vectorsCorrects.CorrectReductionVectors(vectors, 0, 2);
+             
+            _fileManager.Save(resultVectors);
 
             Console.WriteLine("Correcting vectors in {0} successfully!", fileName);
             Console.ReadKey();
-        }
-
-        private static void CorrectVectors(List<double[]> vectors)
-        {
-            foreach (var vector in vectors)
-            {
-                for (int i = 0; i < vector.Length; i++)
-                {
-                    if (vector[i] > 1)
-                    {
-                        vector[i] = 1;
-                    }
-                }
-            }
         }
     }
 }
