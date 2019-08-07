@@ -21,12 +21,15 @@ namespace NeuralNetwork.ServicesManager.Vectors
                 string[] sourceData = ReadDataFile(dirFiles[i]);
 
                 // Удаление пустых элементов из массива:
+                Console.WriteLine("Deleting empty elements...");
                 sourceData = DeleteEmptyElements(sourceData);
 
                 // Удаление повторяющихся элементов:
+                Console.WriteLine("Distincting...");
                 sourceData = sourceData.Distinct().ToArray();
 
                 // Векторизация всех слов:
+                Console.WriteLine("Vectorizing...");
                 int iter = 0;
                 int itemConvertedCount = 0;
                 Console.WriteLine();

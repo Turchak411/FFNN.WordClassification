@@ -141,7 +141,7 @@ namespace NeuralNetwork.ServicesManager
                 while (!fileReader.EndOfStream)
                 {
                     string[] readedLine = fileReader.ReadLine().Split(' ');
-                    double[] set = new double[readedLine.Length-1];
+                    double[] set = new double[readedLine.Length - 1];
 
                     for (int i = 0; i < readedLine.Length - 1; i++)
                     {

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using NeuralNetwork.Core;
 using NeuralNetwork.ServicesManager;
+using NeuralNetwork.ServicesManager.Vectors;
 
 namespace NeuralNetwork
 {
@@ -19,21 +21,22 @@ namespace NeuralNetwork
 
             #endregion
 
-            const int receptors = 75;
-            const int numberOfOutputClasses = 13; // Количество наших классов
-            int[] neuronByLayer = { 90, 75, numberOfOutputClasses };
+            const int receptors = 70;
+            const int numberOfOutputClasses = 2; // Количество наших классов
+            int[] neuronByLayer = { 60, 50, numberOfOutputClasses };
             _fileManager = new FileManager("memory.txt");
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
             var networkTeacher = new NetworkTeacher(_net, _fileManager)
             {
-                Iteration = 100,
-                TestVectors = _fileManager.ReadVectors("inputDataTest.txt")
+                Iteration = 1000,
+                TestVectors = _fileManager.ReadVectors("inputDataTest3.txt")
             };
 
-            //networkTeacher.PreparingLearningData(false);
+            Vectorize();
+            //networkTeacher.PreparingLearningData();
 
-            networkTeacher.TrainNet();
+            //networkTeacher.TrainNet();
 
             Console.ReadKey();
         }
@@ -55,15 +58,17 @@ namespace NeuralNetwork
             }
         }
 
-        //private static Vectorizer _vectorizer;
+        private static Vectorizer _vectorizer;
 
-        //private static void Vectorize()
-        //{
-        //    string trainDataFolder = "data";
-        //    string outputDataFolder = "vectorizedData";
+        private static void Vectorize()
+        {
+            string trainDataFolder = "data";
+            string outputDataFolder = "vectorizedData";
 
-        //    _vectorizer = new Vectorizer();
-        //    _vectorizer.Vectorizing(trainDataFolder, outputDataFolder);
-        //}
+            _vectorizer = new Vectorizer();
+            _vectorizer.Vectorizing(trainDataFolder, outputDataFolder);
+
+            Console.WriteLine("Vectorizing done!");
+        }
     }
 }
