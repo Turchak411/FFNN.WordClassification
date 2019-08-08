@@ -101,39 +101,46 @@ namespace NeuralNetwork.Core
         /// <summary>
         /// Обучение нейросети
         /// </summary>
-        public void TrainNet()
+        public void TrainNet(bool withSort = false)
         {
             #region Load data from file
 
             List<double[]> inputDataSets = _fileManager.LoadDataSet("inputSets.txt");
             List<double[]> outputDataSets = _fileManager.LoadDataSet("outputSets.txt");
 
-            Console.WriteLine("Sort starting...");
+            #region Sorting
 
-            Random rnd = new Random();
-
-            for (int i = 0; i < inputDataSets.Count; i++)
+            if (withSort)
             {
-                double[] tempInput = inputDataSets[0];
-                double[] tempOutput = outputDataSets[0];
-                inputDataSets.RemoveAt(0);
-                outputDataSets.RemoveAt(0);
+                Console.WriteLine("Sort starting...");
 
-                int rndIndex = rnd.Next(inputDataSets.Count);
+                Random rnd = new Random();
 
-                inputDataSets.Insert(rndIndex, tempInput);
-                outputDataSets.Insert(rndIndex, tempOutput);
+                for (int i = 0; i < inputDataSets.Count; i++)
+                {
+                    double[] tempInput = inputDataSets[0];
+                    double[] tempOutput = outputDataSets[0];
+                    inputDataSets.RemoveAt(0);
+                    outputDataSets.RemoveAt(0);
+
+                    int rndIndex = rnd.Next(inputDataSets.Count);
+
+                    inputDataSets.Insert(rndIndex, tempInput);
+                    outputDataSets.Insert(rndIndex, tempOutput);
+                }
+
+                Console.WriteLine("Sorted sets saving...");
+                _fileManager.SaveVectors(inputDataSets, "inputSet_sorted.txt");
+                _fileManager.SaveVectors(outputDataSets, "outputSet_sorted.txt");
             }
 
-            Console.WriteLine("Sorted sets saving...");
-            _fileManager.SaveVectors(inputDataSets, "inputSet_sorted.txt");
-            _fileManager.SaveVectors(outputDataSets, "outputSet_sorted.txt");
+            #endregion
 
             #endregion
 
             Console.WriteLine("Training net...");
-            try
-            {
+            //try
+            //{
                 using (var progress = new ProgressBar())
                 {
                     for (int iteration = 0; iteration < Iteration; iteration++)
@@ -160,11 +167,11 @@ namespace NeuralNetwork.Core
                 }
 
                 Console.WriteLine("Training success!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Training failed! " + ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("Training failed! " + ex.Message);
+            //}
         }
     }
 }
