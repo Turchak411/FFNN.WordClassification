@@ -34,7 +34,7 @@ namespace WeightsGenerator
             for (int i = 0; i < valuesRowLength; i++)
             {
                 fileWriter.Write(" " + GenerateValue());
-                Thread.Sleep(20);
+                //Thread.Sleep(20);
             }
 
             fileWriter.WriteLine();
