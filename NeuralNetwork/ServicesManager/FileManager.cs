@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using NeuralNetwork.ServicesManager.Vectors;
 
 namespace NeuralNetwork.ServicesManager
@@ -90,13 +91,10 @@ namespace NeuralNetwork.ServicesManager
 
         public List<Coeficent> ReadVectors(string filePath)
         {
-            if (!File.Exists(filePath))
-            {
-                return null;
-            }
+            if (!File.Exists(filePath)) return null;
 
             var vectors = new List<Coeficent>();
-            using (StreamReader fileReader = new StreamReader(filePath))
+            using (StreamReader fileReader = new StreamReader(filePath, Encoding.Default))
             {
                 while (!fileReader.EndOfStream)
                 {
@@ -142,13 +140,14 @@ namespace NeuralNetwork.ServicesManager
                 {
                     string[] readedLine = fileReader.ReadLine().Split(' ');
                     double[] set = new double[readedLine.Length - 1];
+                   
+                        for (int i = 0; i < readedLine.Length - 1; i++)
+                        {
+                            set[i] = double.Parse(readedLine[i]);
+                        }
 
-                    for (int i = 0; i < readedLine.Length - 1; i++)
-                    {
-                        set[i] = double.Parse(readedLine[i]);
-                    }
-
-                    sets.Add(set);
+                        sets.Add(set);
+                   
                 }
             }
 

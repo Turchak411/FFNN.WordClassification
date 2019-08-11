@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeightsGenerator", "Weights
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorCorrector", "VectorCorrector\VectorCorrector.csproj", "{A9F85E30-4E07-4682-9CA3-C037819FEF66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueVectors", "UniqueVectors\UniqueVectors.csproj", "{AABE000B-A4BA-4008-A6F4-BFB56D0FCC9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A9F85E30-4E07-4682-9CA3-C037819FEF66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9F85E30-4E07-4682-9CA3-C037819FEF66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9F85E30-4E07-4682-9CA3-C037819FEF66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AABE000B-A4BA-4008-A6F4-BFB56D0FCC9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AABE000B-A4BA-4008-A6F4-BFB56D0FCC9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AABE000B-A4BA-4008-A6F4-BFB56D0FCC9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AABE000B-A4BA-4008-A6F4-BFB56D0FCC9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

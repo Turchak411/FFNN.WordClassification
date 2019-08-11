@@ -21,22 +21,22 @@ namespace NeuralNetwork
 
             #endregion
 
-            const int receptors = 70;
+            const int receptors = 75;
             const int numberOfOutputClasses = 2; // Количество наших классов
-            int[] neuronByLayer = { 60, 50, numberOfOutputClasses };
-            _fileManager = new FileManager("memory.txt");
+            int[] neuronByLayer = { 500, 500, numberOfOutputClasses };
+            _fileManager = new FileManager("memory_75_60_50_2.txt");
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
             var networkTeacher = new NetworkTeacher(_net, _fileManager)
             {
                 Iteration = 1000,
-                TestVectors = _fileManager.ReadVectors("inputDataTest3.txt")
+                TestVectors = _fileManager.ReadVectors("inputDataTest4.txt")
             };
 
-            Vectorize();
-            //networkTeacher.PreparingLearningData();
+           // Vectorize();
+         //networkTeacher.PreparingLearningData();
 
-            //networkTeacher.TrainNet();
+           networkTeacher.TrainNet();
 
             Console.ReadKey();
         }
@@ -62,7 +62,7 @@ namespace NeuralNetwork
 
         private static void Vectorize()
         {
-            string trainDataFolder = "data";
+            string trainDataFolder = "DataSet";
             string outputDataFolder = "vectorizedData";
 
             _vectorizer = new Vectorizer();

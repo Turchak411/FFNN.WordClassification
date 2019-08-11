@@ -72,16 +72,19 @@ namespace NeuralNetwork.ServicesManager
                     while (!fileReader.EndOfStream)
                     {
                         string[] readedWordData = fileReader.ReadLine().Split(' ');
-                        double[] inputDataSet = new double[readedWordData.Length - 2];
-
+                       
                         // Initial 'j' = 0 -> without string-word
-                        for (int j = 0; j < readedWordData.Length - 2; j++)
+                        if (readedWordData.Length == 77)
                         {
-                            inputDataSet[j] = double.Parse(readedWordData[j + 1]);
-                        }
+                            double[] inputDataSet = new double[readedWordData.Length - 2];
+                            for (int j = 0; j < readedWordData.Length - 2; j++)
+                            {
+                                inputDataSet[j] = double.Parse(readedWordData[j + 1]);
+                            }
 
-                        inputDataSets.Add(inputDataSet);
-                        outputDataSets.Add(outputDataSet);
+                            inputDataSets.Add(inputDataSet);
+                            outputDataSets.Add(outputDataSet);
+                        }
                     }
                 }
             }
