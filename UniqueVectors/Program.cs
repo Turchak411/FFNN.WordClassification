@@ -18,13 +18,13 @@ namespace UniqueVectors
             var dataSets = searchUniqueVectors.CreateDataSets(inputDataSets, outputDataSets);
             var listDataSets = searchUniqueVectors.CheckUniqueVectors(dataSets, "inputSets.txt");
 
-            List<double[]> inputSets = new List<double[]>();
-            List<double[]> outputSets = new List<double[]>();
+            List<float[]> inputSets = new List<float[]>();
+            List<float[]> outputSets = new List<float[]>();
 
             foreach (var dataSet in listDataSets)
             {
-                inputDataSets.Add(dataSet.Vectors);
-                inputDataSets.Add(dataSet.Ideals);
+                inputSets.Add(dataSet.Vectors);
+                outputSets.Add(dataSet.Ideals);
             }
 
             SaveVectors(inputSets, "inputSetsNew.txt");
@@ -38,7 +38,7 @@ namespace UniqueVectors
         /// </summary>
         /// <param name="dataSets">dataSets</param>
         /// <param name="path">Путь к файлу</param>
-        public static void SaveVectors(List<double[]> dataSets, string path)
+        public static void SaveVectors(List<float[]> dataSets, string path)
         {
             using (var sw = new StreamWriter(path))
             {

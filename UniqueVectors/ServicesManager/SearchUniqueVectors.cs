@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hash2Vec.ServiceManager.ReadingVectors;
+using NeuralNetwork;
 using UniqueVectors.Core;
 
 namespace UniqueVectors.ServicesManager
@@ -18,45 +20,49 @@ namespace UniqueVectors.ServicesManager
             var newDataSets = new List<DataSets>(dataSets);
             int count = 0;
 
-            foreach (var representation in vocabulary.Words)
+            using (var progressBar = new ProgressBar())
             {
-                var distanceList = vocabulary.Distance(representation, 10, 2).ToList();
-                var vectorsDuplicats = distanceList.AsParallel().Where(dis => dis.DistanceValue >= 0.9);
-
-                // var distancesTo = vectorsDuplicats as DistanceTo[] ?? vectorsDuplicats.ToArray();
-                var vectorsEnumerable = vectorsDuplicats.AsParallel().SelectMany(vec =>
-                    //  newDataSets.Where(data => EqualsVectors(data.Vectors, vec.Representation.NumericVector)));
-                    dataSets.Where(data => EqualsVectors(data.Vectors, vec.Representation.NumericVector))).ToList();
-
-                var vector = newDataSets.AsParallel()
-                    .FirstOrDefault(vec => EqualsVectors(vec.Vectors, representation.NumericVector));
-                // var dataSetses = vectorsEnumerable as DataSets[] ?? vectorsEnumerable.ToArray();
-                if (vector != null)
+                foreach (var representation in vocabulary.Words)
                 {
-                    newDataSets.Remove(vector);
-                    //foreach (var vec in vectorsEnumerable)
-                    Parallel.ForEach(vectorsEnumerable, vec =>
+                    var distanceList = vocabulary.Distance(representation, 10, 2).ToList();
+                    var vectorsDuplicats = distanceList.AsParallel().Where(dis => dis.DistanceValue >= 0.9);
+
+                    // var distancesTo = vectorsDuplicats as DistanceTo[] ?? vectorsDuplicats.ToArray();
+                    var vectorsEnumerable = vectorsDuplicats.AsParallel().SelectMany(vec =>
+                        //  newDataSets.Where(data => EqualsVectors(data.Vectors, vec.Representation.NumericVector)));
+                        dataSets.Where(data => EqualsVectors(data.Vectors, vec.Representation.NumericVector))).ToList();
+
+                    var vector = newDataSets.AsParallel()
+                        .FirstOrDefault(vec => EqualsVectors(vec.Vectors, representation.NumericVector));
+                    // var dataSetses = vectorsEnumerable as DataSets[] ?? vectorsEnumerable.ToArray();
+                    if (vector != null)
                     {
-                        for (int i = 0; i < vector.Ideals.Length; i++)
+                        newDataSets.Remove(vector);
+                        //foreach (var vec in vectorsEnumerable)
+                        Parallel.ForEach(vectorsEnumerable, vec =>
                         {
-                            if (vector.Ideals[i] < vec.Ideals[i])
+                            for (int i = 0; i < vector.Ideals.Length; i++)
                             {
-                                vector.Ideals[i] = vec.Ideals[i];
+                                if (vector.Ideals[i] < vec.Ideals[i])
+                                {
+                                    vector.Ideals[i] = vec.Ideals[i];
+                                }
                             }
-                        }
-                    });
-                   
-                    newDataSets.Add(vector);
+                        });
+
+                        newDataSets.Add(vector);
+                    }
+
+                    //   var enumerable = vectorsEnumerable.Select(data => data.Select(vec => newDataSets.Remove(vec)));
+
+                    foreach (var data in vectorsEnumerable)
+                    {
+                        newDataSets.Remove(data);
+                    }
+
+                    count++;
+                    progressBar.Report((double)count / vocabulary.Words.Length);
                 }
-
-                //   var enumerable = vectorsEnumerable.Select(data => data.Select(vec => newDataSets.Remove(vec)));
-
-                foreach (var data in vectorsEnumerable)
-                {
-                   newDataSets.Remove(data);
-                }
-
-                count++;
             }
 
             return newDataSets;

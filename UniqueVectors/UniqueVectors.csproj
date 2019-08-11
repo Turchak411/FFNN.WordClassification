@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Hash2Vec, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hash2Vec.0.1.0\lib\netstandard2.0\Hash2Vec.dll</HintPath>
+      <HintPath>..\packages\Hash2Vec.0.1.1\lib\netstandard2.0\Hash2Vec.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,7 +49,6 @@
     <Compile Include="Core\DataSets.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServicesManager\Hash2VecTextReader.cs" />
     <Compile Include="ServicesManager\SearchUniqueVectors.cs" />
   </ItemGroup>
   <ItemGroup>
