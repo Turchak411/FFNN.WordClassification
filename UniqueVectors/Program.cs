@@ -16,10 +16,10 @@ namespace UniqueVectors
             var outputDataSets = LoadDataSet("outputSets.txt");
 
             var dataSets = searchUniqueVectors.CreateDataSets(inputDataSets, outputDataSets);
-            var listDataSets = searchUniqueVectors.CheckUniqueVectors(dataSets, "inputSets.txt");
+            var listDataSets = searchUniqueVectors.CheckUniqueVectorsParallel(dataSets, "inputSets.txt");
 
-            List<float[]> inputSets = new List<float[]>();
-            List<float[]> outputSets = new List<float[]>();
+            var inputSets = new List<float[]>();
+            var outputSets = new List<float[]>();
 
             foreach (var dataSet in listDataSets)
             {
