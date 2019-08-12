@@ -16,7 +16,7 @@ namespace UniqueVectors
             var outputDataSets = LoadDataSet("outputSets.txt");
 
             var dataSets = searchUniqueVectors.CreateDataSets(inputDataSets, outputDataSets);
-            var listDataSets = searchUniqueVectors.CheckUniqueVectorsParallel(dataSets, "inputSets.txt");
+            var listDataSets = searchUniqueVectors.CheckUniqueVectorsParallel(dataSets, "inputSets.txt",15);
 
             var inputSets = new List<float[]>();
             var outputSets = new List<float[]>();

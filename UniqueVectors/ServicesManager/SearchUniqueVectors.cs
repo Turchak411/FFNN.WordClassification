@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -71,12 +72,14 @@ namespace UniqueVectors.ServicesManager
             Data.NewDataSets = new List<DataSets>(dataSets);
             var threadList = new List<Thread>();
 
-            int offset = wordsLength / flows;
+            var offset = wordsLength / flows;
+            var difference = wordsLength - offset * flows;
 
-            for (int i = 0, index = 1; i < wordsLength; i = i + offset, index++)
+            for (int i = 0, index = 1, bias = 0; bias < wordsLength; i = i + offset, index++)
             {
                 if (index == 2) i++;
-                var uniqueVectors = new Core.UniqueVectors(vocabulary, dataSets, i, offset * index);
+                bias = index != flows ? offset * index : offset * index + difference;
+                var uniqueVectors = new Core.UniqueVectors(vocabulary, dataSets, i, bias);
                 threadList.Add(new Thread(uniqueVectors.GetUniqueVectors) {Name = $"Thread {index}"});
             }
 
