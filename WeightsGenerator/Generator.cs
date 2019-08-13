@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.IO.Pipes;
 using System.Threading;
+using NeuralNetwork;
 
 namespace WeightsGenerator
 {
@@ -8,25 +10,46 @@ namespace WeightsGenerator
     {
         public void GenerateMemory(int inputVectorLength, int[] netScheme, string filePath)
         {
-            using (StreamWriter fileWriter = new StreamWriter(filePath))
+            using (var progress = new ProgressBar())
             {
-                for (int i = 0; i < netScheme.Length; i++)
-                {
-                    for (int k = 0; k < netScheme[i]; k++)
-                    {
-                        fileWriter.Write("layer_{0} neuron_{1}", i, k);
+                int iteration = 0;
+                int iterationsTotal = CalcTotalIterations(netScheme);
 
-                        if (i == 0)
+                using (StreamWriter fileWriter = new StreamWriter(filePath))
+                {
+                    for (int i = 0; i < netScheme.Length; i++)
+                    {
+                        for (int k = 0; k < netScheme[i]; k++)
                         {
-                            GenerateValueRow(fileWriter, inputVectorLength);
-                        }
-                        else
-                        {
-                            GenerateValueRow(fileWriter, netScheme[i - 1]);
+                            fileWriter.Write("layer_{0} neuron_{1}", i, k);
+
+                            if (i == 0)
+                            {
+                                GenerateValueRow(fileWriter, inputVectorLength);
+                            }
+                            else
+                            {
+                                GenerateValueRow(fileWriter, netScheme[i - 1]);
+                            }
+
+                            iteration++;
+                            progress.Report((double)iteration / iterationsTotal);
                         }
                     }
                 }
             }
+        }
+
+        private int CalcTotalIterations(int[] netScheme)
+        {
+            int iterationsTotal = 0;
+
+            foreach (var layer in netScheme)
+            {
+                iterationsTotal += layer;
+            }
+
+            return iterationsTotal;
         }
 
         private void GenerateValueRow(StreamWriter fileWriter, int valuesRowLength)
