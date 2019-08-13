@@ -2,7 +2,6 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using NeuralNetwork.ServicesManager;
 using NeuralNetwork.ServicesManager.Vectors;
 
@@ -27,10 +26,7 @@ namespace NeuralNetwork.Core
 
         public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration)
         {
-            if (testVectors == null)
-            {
-                return;
-            }
+            if (testVectors == null) return;
 
             if (iteration > 0) ClearLine(outputSetLength+4);
             var result = new StringBuilder();
@@ -146,6 +142,7 @@ namespace NeuralNetwork.Core
 
             #endregion
 
+            int k = 0;
             Console.WriteLine("Training net...");
             try
             {
@@ -157,13 +154,12 @@ namespace NeuralNetwork.Core
                         var learningSpeed = 0.01 * Math.Pow(0.1, iteration / 150000);
                         using (var progress1 = new ProgressBar())
                         {
-                            for (int k = 0; k < inputDataSets.Count; k++)
+                            for (k = 0; k < inputDataSets.Count; k++)
                             {
                                 _net.Handle(inputDataSets[k]);
                                 _net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
                                 progress1.Report((double)k / inputDataSets.Count);
-                            }
-                           
+                            }   
                         }
 
                         progress.Report((double) iteration / Iteration);
@@ -178,7 +174,7 @@ namespace NeuralNetwork.Core
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Training failed! " + ex.Message);
+                Console.WriteLine("Training failed! " + ex.Message + Convert.ToString(k));
             }
 }
     }

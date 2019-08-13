@@ -26,7 +26,9 @@ namespace NeuralNetwork
             const int receptors = 75;
             const int numberOfOutputClasses = 2; // Количество наших классов
             int[] neuronByLayer = { 500, 500, numberOfOutputClasses };
+
             _fileManager = new FileManager("memory.txt");
+
             _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
 
             var networkTeacher = new NetworkTeacher(_net, _fileManager)
@@ -46,7 +48,7 @@ namespace NeuralNetwork
 
         private static void Vectorize()
         {
-            string trainDataFolder = "data";
+            string trainDataFolder = "DataSet";
             string outputDataFolder = "vectorizedData";
 
             _vectorizer = new Vectorizer();
