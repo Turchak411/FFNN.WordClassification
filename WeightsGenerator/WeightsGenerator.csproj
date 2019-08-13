@@ -45,16 +45,11 @@
   <ItemGroup>
     <Compile Include="Generator.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgressBar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NeuralNetwork\NeuralNetwork.csproj">
-      <Project>{a9cfd43b-07de-43d4-8c52-99ad78e16a4a}</Project>
-      <Name>NeuralNetwork</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

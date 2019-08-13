@@ -2,7 +2,6 @@
 using System.IO;
 using System.IO.Pipes;
 using System.Threading;
-using NeuralNetwork;
 
 namespace WeightsGenerator
 {
