@@ -60,7 +60,7 @@ namespace NeuralNetwork.Core
             }
         }
 
-        public void PreparingLearningData(bool primaryLoad = true)
+        public void PreparingLearningData(bool primaryLoad = true, bool withMerging = false)
         {
             #region Load data from files
             var stopWatch = Stopwatch.StartNew();
@@ -76,15 +76,23 @@ namespace NeuralNetwork.Core
 
             #region Vector merging
 
-            Console.WriteLine("Start vector merging...");
-            _merger = new Merger();
-            var list = _merger.MergeItems(inputDataSets, outputDataSets);
-            Console.WriteLine("Save results...");
-            _fileManager.SaveVectors(list[0], "inputSets.txt");
-            _fileManager.SaveVectors(list[1], "outputSets.txt");
+            if (withMerging)
+            {
+                Console.WriteLine("Start vector merging...");
+                _merger = new Merger();
+                var list = _merger.MergeItems(inputDataSets, outputDataSets);
+                Console.WriteLine("Save results...");
 
-            //_fileManager.SaveVectors(inputDataSets, "inputSets.txt");
-            //_fileManager.SaveVectors(outputDataSets, "outputSets.txt");
+                _fileManager.SaveVectors(list[0], "inputSets.txt");
+                _fileManager.SaveVectors(list[1], "outputSets.txt");
+            }
+            else
+            {
+                Console.WriteLine("Save results...");
+
+                _fileManager.SaveVectors(inputDataSets, "inputSets.txt");
+                _fileManager.SaveVectors(outputDataSets, "outputSets.txt");
+            }
 
             ShowTime(stopWatch.Elapsed); stopWatch.Stop();
             Console.WriteLine("Save result done!");
@@ -97,33 +105,40 @@ namespace NeuralNetwork.Core
         /// <summary>
         /// Обучение нейросети
         /// </summary>
-        public void TrainNet()
+        public void TrainNet(bool withSort = false)
         {
             #region Load data from file
 
             List<double[]> inputDataSets = _fileManager.LoadDataSet("inputSets.txt");
             List<double[]> outputDataSets = _fileManager.LoadDataSet("outputSets.txt");
 
-            Console.WriteLine("Sort starting...");
+            #region Sorting
 
-            Random rnd = new Random();
-
-            for (int i = 0; i < inputDataSets.Count; i++)
+            if (withSort)
             {
-                double[] tempInput = inputDataSets[0];
-                double[] tempOutput = outputDataSets[0];
-                inputDataSets.RemoveAt(0);
-                outputDataSets.RemoveAt(0);
+                Console.WriteLine("Sort starting...");
 
-                int rndIndex = rnd.Next(inputDataSets.Count);
+                Random rnd = new Random();
 
-                inputDataSets.Insert(rndIndex, tempInput);
-                outputDataSets.Insert(rndIndex, tempOutput);
+                for (int i = 0; i < inputDataSets.Count; i++)
+                {
+                    double[] tempInput = inputDataSets[0];
+                    double[] tempOutput = outputDataSets[0];
+                    inputDataSets.RemoveAt(0);
+                    outputDataSets.RemoveAt(0);
+
+                    int rndIndex = rnd.Next(inputDataSets.Count);
+
+                    inputDataSets.Insert(rndIndex, tempInput);
+                    outputDataSets.Insert(rndIndex, tempOutput);
+                }
+
+                Console.WriteLine("Sorted sets saving...");
+                _fileManager.SaveVectors(inputDataSets, "inputSet_sorted.txt");
+                _fileManager.SaveVectors(outputDataSets, "outputSet_sorted.txt");
             }
 
-            Console.WriteLine("Sorted sets saving...");
-            _fileManager.SaveVectors(inputDataSets, "inputSet_sorted.txt");
-            _fileManager.SaveVectors(outputDataSets, "outputSet_sorted.txt");
+            #endregion
 
             #endregion
 
@@ -161,6 +176,6 @@ namespace NeuralNetwork.Core
             {
                 Console.WriteLine("Training failed! " + ex.Message + Convert.ToString(k));
             }
-        }
+}
     }
 }
