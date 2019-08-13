@@ -13,15 +13,15 @@ namespace VectorCorrector
 
         static void Main(string[] args)
         {
-            var fileName = "auto & economics\\outputSets.txt";
+            var fileName = "outputSets.txt";
             _fileManager = new FileManager(fileName);
             _vectorsCorrects = new VectorsCorrects();
             var vectors = _fileManager.Load();
 
-            //_vectorsCorrects.CorrectVectors(ref vectors);
-             var resultVectors = _vectorsCorrects.CorrectReductionVectors(vectors, 0, 2);
+            _vectorsCorrects.CorrectVectors(ref vectors);
+            //var resultVectors = _vectorsCorrects.CorrectReductionVectors(vectors, 0, 2);
              
-            _fileManager.Save(resultVectors);
+            _fileManager.Save(vectors);
 
             Console.WriteLine("Correcting vectors in {0} successfully!", fileName);
             Console.ReadKey();

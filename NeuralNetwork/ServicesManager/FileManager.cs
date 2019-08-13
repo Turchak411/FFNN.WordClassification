@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
 using NeuralNetwork.ServicesManager.Vectors;
 
 namespace NeuralNetwork.ServicesManager
@@ -11,8 +13,20 @@ namespace NeuralNetwork.ServicesManager
 
         public FileManager() { }
 
-        public FileManager(string dataPath) =>
-            _dataPath = File.Exists(dataPath) ? _dataPath = dataPath : throw new Exception("Отсутствуеn файл памяти сети!");
+        public FileManager(string dataPath)
+        {
+            // Запуск процесса генерации памяти в случае ее отсутствия:
+            if (File.Exists(dataPath))
+            {
+                _dataPath = dataPath;
+            }
+            else
+            {
+                Console.WriteLine("NeuralNet memory is missing! Start generating process...");
+                _dataPath = dataPath;
+                WeightsGenerator.Program.Main(null);
+            }
+        }
 
         public double[] LoadMemory(int layerNumber, int neuronNumber)
         {
@@ -96,7 +110,7 @@ namespace NeuralNetwork.ServicesManager
             }
 
             var vectors = new List<Coeficent>();
-            using (StreamReader fileReader = new StreamReader(filePath))
+            using (StreamReader fileReader = new StreamReader(filePath, Encoding.Default))
             {
                 while (!fileReader.EndOfStream)
                 {
@@ -141,7 +155,7 @@ namespace NeuralNetwork.ServicesManager
                 while (!fileReader.EndOfStream)
                 {
                     string[] readedLine = fileReader.ReadLine().Split(' ');
-                    double[] set = new double[readedLine.Length-1];
+                    double[] set = new double[readedLine.Length - 1];
 
                     for (int i = 0; i < readedLine.Length - 1; i++)
                     {

@@ -21,26 +21,32 @@ namespace NeuralNetwork.ServicesManager.Vectors
                 string[] sourceData = ReadDataFile(dirFiles[i]);
 
                 // Удаление пустых элементов из массива:
+                Console.WriteLine("Deleting empty elements...");
                 sourceData = DeleteEmptyElements(sourceData);
 
                 // Удаление повторяющихся элементов:
+                Console.WriteLine("Distincting...");
                 sourceData = sourceData.Distinct().ToArray();
 
                 // Векторизация всех слов:
+                Console.WriteLine("Vectorizing...");
                 int iter = 0;
                 int itemConvertedCount = 0;
                 Console.WriteLine();
                 for(int k = 0; k < sourceData.Length; k++)
                 {
-                    _coefCollection.Add(new Coeficent(sourceData[k].ToLower(), GetWordVector(sourceData[k].ToLower())));
-
-                    itemConvertedCount++;
-                    iter++;
-
-                    if (iter == 10000)
+                    if (sourceData[k].Length > 2 && sourceData[k].Length < 35)
                     {
-                        Console.WriteLine("{0} / {1} words already converted!", itemConvertedCount, sourceData.Length);
-                        iter = 0;
+                        _coefCollection.Add(new Coeficent(sourceData[k].ToLower(), GetWordVector(sourceData[k].ToLower())));
+
+                        itemConvertedCount++;
+                        iter++;
+
+                        if (iter == 10000)
+                        {
+                            Console.WriteLine("{0} / {1} words already converted!", itemConvertedCount, sourceData.Length);
+                            iter = 0;
+                        }
                     }
                 };
 
@@ -71,7 +77,7 @@ namespace NeuralNetwork.ServicesManager.Vectors
             {
                 ' ', '\t', '"', ',', '.', ':', ';', '!', '?', '«',
                 '»', '<', '>', '„', '“', '—', '(', ')', '_', '/', '=',
-                '\\', '`', '\n', '+'
+                '\\', '`', '\n', '+', '⇡', '#'
             };
 
             string data;

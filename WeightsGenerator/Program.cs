@@ -1,10 +1,11 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 
 namespace WeightsGenerator
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Generator generator = new Generator();
 

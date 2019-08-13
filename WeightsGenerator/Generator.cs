@@ -42,7 +42,7 @@ namespace WeightsGenerator
 
         private double GenerateValue()
         {
-            Random rnd = new Random();
+            Random rnd = new Random(DateTime.Now.Millisecond);
             return rnd.NextDouble() - 0.5;
         }
     }

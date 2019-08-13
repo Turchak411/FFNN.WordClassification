@@ -61,6 +61,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\WeightsGenerator\WeightsGenerator.csproj">
+      <Project>{4c17b48a-01c5-4578-ab2b-6ab58d466c21}</Project>
+      <Name>WeightsGenerator</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
