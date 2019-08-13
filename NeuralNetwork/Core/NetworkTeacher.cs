@@ -64,7 +64,7 @@ namespace NeuralNetwork.Core
             }
         }
 
-        public void PreparingLearningData(bool primaryLoad = true)
+        public void PreparingLearningData(bool primaryLoad = true, bool withMerging = false)
         {
             #region Load data from files
             var stopWatch = Stopwatch.StartNew();
@@ -80,15 +80,23 @@ namespace NeuralNetwork.Core
 
             #region Vector merging
 
-            //Console.WriteLine("Start vector merging...");
-            //_merger = new Merger();
-            //var list = _merger.MergeItems(inputDataSets, outputDataSets);
-            Console.WriteLine("Save results...");
-            //_fileManager.SaveVectors(list[0], "inputSets.txt");
-            //_fileManager.SaveVectors(list[1], "outputSets.txt");
+            if (withMerging)
+            {
+                Console.WriteLine("Start vector merging...");
+                _merger = new Merger();
+                var list = _merger.MergeItems(inputDataSets, outputDataSets);
+                Console.WriteLine("Save results...");
 
-            _fileManager.SaveVectors(inputDataSets, "inputSets.txt");
-            _fileManager.SaveVectors(outputDataSets, "outputSets.txt");
+                _fileManager.SaveVectors(list[0], "inputSets.txt");
+                _fileManager.SaveVectors(list[1], "outputSets.txt");
+            }
+            else
+            {
+                Console.WriteLine("Save results...");
+
+                _fileManager.SaveVectors(inputDataSets, "inputSets.txt");
+                _fileManager.SaveVectors(outputDataSets, "outputSets.txt");
+            }
 
             ShowTime(stopWatch.Elapsed); stopWatch.Stop();
             Console.WriteLine("Save result done!");
@@ -139,8 +147,8 @@ namespace NeuralNetwork.Core
             #endregion
 
             Console.WriteLine("Training net...");
-            //try
-            //{
+            try
+            {
                 using (var progress = new ProgressBar())
                 {
                     for (int iteration = 0; iteration < Iteration; iteration++)
@@ -167,11 +175,11 @@ namespace NeuralNetwork.Core
                 }
 
                 Console.WriteLine("Training success!");
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("Training failed! " + ex.Message);
-            //}
-        }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Training failed! " + ex.Message);
+            }
+}
     }
 }
