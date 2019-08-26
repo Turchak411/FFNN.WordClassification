@@ -46,6 +46,26 @@ namespace NeuralNetwork.Core
             Console.WriteLine(result);
         }
 
+        public void TestResult(List<Coeficent> testVectors, int outputSetLength)
+        {
+            if (testVectors == null) return;
+
+            var result = new StringBuilder();
+            testVectors.ForEach(vector => result.Append($"   {vector._word}     "));
+            result.Append('\n');
+            for (int k = 0; k < outputSetLength; k++)
+            {
+                foreach (var vector in testVectors)
+                {
+                    var outputVector = _net.Handle(vector._listFloat);
+                    result.Append($"{k} - {outputVector[k]:f3}\t");
+                }
+                result.Append('\n');
+            }
+
+            Console.WriteLine(result);
+        }
+
         /// <summary>
         /// Очистка строк в консоли
         /// </summary>
@@ -154,7 +174,7 @@ namespace NeuralNetwork.Core
                         var learningSpeed = 0.01 * Math.Pow(0.1, iteration / 150000);
                         using (var progress1 = new ProgressBar())
                         {
-                            for (k = 0; k < inputDataSets.Count; k++)
+                            for (k = 40001; k < inputDataSets.Count; k++)
                             {
                                 _net.Handle(inputDataSets[k]);
                                 _net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
@@ -176,6 +196,18 @@ namespace NeuralNetwork.Core
             {
                 Console.WriteLine("Training failed! " + ex.Message + Convert.ToString(k));
             }
-}
+        }
+
+        public void DoTest()
+        {
+            #region Load data from file
+
+            List<double[]> inputDataSets = _fileManager.LoadDataSet("inputSets.txt");
+            List<double[]> outputDataSets = _fileManager.LoadDataSet("outputSets.txt");
+
+            #endregion
+
+            TestResult(TestVectors, outputDataSets[0].Length);
+        }
     }
 }

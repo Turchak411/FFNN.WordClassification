@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using NeuralNetwork.Core;
 using NeuralNetwork.ServicesManager;
@@ -25,7 +24,7 @@ namespace NeuralNetwork
 
             const int receptors = 75;
             const int numberOfOutputClasses = 2; // Количество наших классов
-            int[] neuronByLayer = { 500, 500, numberOfOutputClasses };
+            int[] neuronByLayer = { 100, 40, 5, numberOfOutputClasses };
 
             _fileManager = new FileManager("memory.txt");
 
@@ -33,15 +32,17 @@ namespace NeuralNetwork
 
             var networkTeacher = new NetworkTeacher(_net, _fileManager)
             {
-                Iteration = 100,
-                TestVectors = _fileManager.ReadVectors("inputDataTest3.txt")
+                Iteration = 4500,
+                TestVectors = _fileManager.ReadVectors("inputDataTest4.txt")
             };
 
             //Vectorize();
 
             //networkTeacher.PreparingLearningData();
 
-            networkTeacher.TrainNet();
+            //networkTeacher.TrainNet();
+
+            networkTeacher.DoTest();
 
             Console.ReadKey();
         }
