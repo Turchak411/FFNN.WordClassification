@@ -9,7 +9,6 @@ namespace NeuralNetwork
 {
     static class Program
     {
-        private static NeuralNetwork _net;
         private static FileManager _fileManager;
 
         private static Vectorizer _vectorizer;
@@ -25,13 +24,13 @@ namespace NeuralNetwork
 
             const int receptors = 75;
             const int numberOfOutputClasses = 1; // Количество наших классов
-            int[] neuronByLayer = { 600, numberOfOutputClasses };
+            int[] neuronByLayer = { 10, 10, numberOfOutputClasses };
 
             _fileManager = new FileManager("memory.txt");
 
             var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 2, _fileManager)
             {
-                Iteration = 2000,
+                Iteration = 100,
                 TestVectors = _fileManager.ReadVectors("inputDataTest6.txt")
             };
 

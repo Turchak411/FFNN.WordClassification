@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NeuralNetwork.ServicesManager;
 using NeuralNetwork.ServicesManager.Vectors;
+using NeuralNetwork.ServicesManager.Visualize;
 
 namespace NeuralNetwork.Core
 {
@@ -11,6 +12,8 @@ namespace NeuralNetwork.Core
     {
         private Merger _merger;
         private FileManager _fileManager;
+
+        private TrainVisualizator _trainVisualizator;
 
         private List<NeuralNetwork> _netsList;
 
@@ -48,6 +51,7 @@ namespace NeuralNetwork.Core
                 {
                     var outputVector = _netsList[i].Handle(vector._listFloat);
                     //result.Append($"{k} - {outputVector[k]:f3}\t");
+                    _trainVisualizator.AddPoint(vector, outputVector[0]);
                     result.Append($"{outputVector[0]:f6}\t");
                 }
                 result.Append('\n');
@@ -152,6 +156,9 @@ namespace NeuralNetwork.Core
 
             #endregion
 
+            _trainVisualizator = new TrainVisualizator();
+            _trainVisualizator.StartVisualize(TestVectors);
+
             int k = 0;
             Console.WriteLine("Training net...");
             try
@@ -190,6 +197,9 @@ namespace NeuralNetwork.Core
                     {
                         _netsList[i].SaveMemory();
                     }
+
+                    // Save train graphics:
+                    _trainVisualizator.SaveGraphics();
                 }
 
                 Console.WriteLine("Training success!");
@@ -198,6 +208,6 @@ namespace NeuralNetwork.Core
             {
                 Console.WriteLine("Training failed! " + ex.Message + Convert.ToString(k));
             }
-}
+        }
     }
 }
