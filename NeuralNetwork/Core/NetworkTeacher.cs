@@ -28,17 +28,17 @@ namespace NeuralNetwork.Core
             // Ицициализация сети по одинаковому шаблону:
             for(int i = 0; i < netsCount; i++)
             {
-                _netsList.Add(new NeuralNetwork(neuronByLayer, receptors, fileManager));
+                _netsList.Add(new NeuralNetwork(neuronByLayer, receptors, fileManager, "memory_" + i.ToString() + ".txt"));
             }
 
             _fileManager = fileManager;
         }
 
-        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration)
+        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration, int startIteration)
         {
             if (testVectors == null) return;
 
-            if (iteration > 0) ClearLine(outputSetLength+4);
+            if (iteration > startIteration) ClearLine(outputSetLength+4);
             var result = new StringBuilder();
             result.Append($"\nИтерация обучения: {iteration}\n");
             testVectors.ForEach(vector => result.Append($"   {vector._word}     "));
@@ -53,6 +53,26 @@ namespace NeuralNetwork.Core
                     //result.Append($"{k} - {outputVector[k]:f3}\t");
                     _trainVisualizator.AddPoint(vector, outputVector[0]);
                     result.Append($"{outputVector[0]:f6}\t");
+                }
+                result.Append('\n');
+            }
+
+            Console.WriteLine(result);
+        }
+
+        public void TestResult(List<Coeficent> testVectors, int outputSetLength)
+        {
+            if (testVectors == null) return;
+
+            var result = new StringBuilder();
+            testVectors.ForEach(vector => result.Append($"   {vector._word}     "));
+            result.Append('\n');
+            for (int k = 0; k < outputSetLength; k++)
+            {
+                foreach (var vector in testVectors)
+                {
+                    var outputVector = _net.Handle(vector._listFloat);
+                    result.Append($"{k} - {outputVector[k]:f3}\t");
                 }
                 result.Append('\n');
             }
@@ -119,7 +139,7 @@ namespace NeuralNetwork.Core
         /// <summary>
         /// Обучение нейросети
         /// </summary>
-        public void TrainNet(bool withSort = false)
+        public void TrainNet(int startIteration, bool withSort = false)
         {
             #region Load data from file
 
@@ -165,13 +185,13 @@ namespace NeuralNetwork.Core
             {
                 using (var progress = new ProgressBar())
                 {
-                    for (int iteration = 0; iteration < Iteration; iteration++)
+                    for (int iteration = startIteration; iteration < Iteration; iteration++)
                     {
                         // Calculating learn-speed rate:
                         var learningSpeed = 0.01 * Math.Pow(0.1, iteration / 150000);
                         using (var progress1 = new ProgressBar())
                         {
-                            for (k = 0; k < inputDataSets.Count; k++)
+                            for (k = 40001; k < inputDataSets.Count; k++)
                             {
                                 for(int j = 0; j < outputDataSets[k].Length; j++)
                                 {
@@ -189,13 +209,13 @@ namespace NeuralNetwork.Core
                         }
 
                         progress.Report((double) iteration / Iteration);
-                        TestResult(TestVectors, outputDataSets[0].Length, iteration);
+                        TestResult(TestVectors, outputDataSets[0].Length, iteration, startIteration);
                     }
 
                     // Save network memory:
                     for(int i = 0; i < _netsList.Count; i++)
                     {
-                        _netsList[i].SaveMemory();
+                        _netsList[i].SaveMemory("memory_" + i.ToString() + ".txt");
                     }
 
                     // Save train graphics:
@@ -208,6 +228,18 @@ namespace NeuralNetwork.Core
             {
                 Console.WriteLine("Training failed! " + ex.Message + Convert.ToString(k));
             }
+        }
+
+        public void DoTest()
+        {
+            #region Load data from file
+
+            List<double[]> inputDataSets = _fileManager.LoadDataSet("inputSets.txt");
+            List<double[]> outputDataSets = _fileManager.LoadDataSet("outputSets.txt");
+
+            #endregion
+
+            TestResult(TestVectors, outputDataSets[0].Length);
         }
     }
 }
