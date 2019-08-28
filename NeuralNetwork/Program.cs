@@ -8,7 +8,6 @@ namespace NeuralNetwork
 {
     static class Program
     {
-        private static NeuralNetwork _net;
         private static FileManager _fileManager;
 
         private static Vectorizer _vectorizer;
