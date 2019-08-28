@@ -34,7 +34,7 @@ namespace NeuralNetwork.Core
             _fileManager = fileManager;
         }
 
-        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration, int startIteration)
+        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration, int startIteration, bool withVisualization)
         {
             if (testVectors == null) return;
 
@@ -43,15 +43,18 @@ namespace NeuralNetwork.Core
             result.Append($"\nИтерация обучения: {iteration}\n");
             testVectors.ForEach(vector => result.Append($"   {vector._word}     "));
             result.Append('\n');
-            //for (int k = 0; k < outputSetLength; k++)
-            //{
+
             for (int i = 0; i < _netsList.Count; i++)
             {
                 foreach (var vector in testVectors)
                 {
                     var outputVector = _netsList[i].Handle(vector._listFloat);
-                    //result.Append($"{k} - {outputVector[k]:f3}\t");
-                    _trainVisualizator.AddPoint(vector, outputVector[0]);
+
+                    if(withVisualization)
+                    {
+                        _trainVisualizator.AddPoint(vector, outputVector[0]);
+                    }
+
                     result.Append($"{outputVector[0]:f6}\t");
                 }
                 result.Append('\n');
@@ -119,7 +122,7 @@ namespace NeuralNetwork.Core
         /// <summary>
         /// Обучение нейросети
         /// </summary>
-        public void TrainNet(int startIteration, bool withSort = false)
+        public void TrainNet(int startIteration, bool withSort = false, bool withVisualization = false)
         {
             #region Load data from file
 
@@ -156,8 +159,11 @@ namespace NeuralNetwork.Core
 
             #endregion
 
-            _trainVisualizator = new TrainVisualizator();
-            _trainVisualizator.StartVisualize(TestVectors);
+            if(withVisualization)
+            {
+                _trainVisualizator = new TrainVisualizator();
+                _trainVisualizator.StartVisualize(TestVectors);
+            }
 
             int k = 0;
             Console.WriteLine("Training net...");
@@ -189,7 +195,7 @@ namespace NeuralNetwork.Core
                         }
 
                         progress.Report((double) iteration / Iteration);
-                        TestResult(TestVectors, outputDataSets[0].Length, iteration, startIteration);
+                        TestResult(TestVectors, outputDataSets[0].Length, iteration, startIteration, withVisualization);
                     }
 
                     // Save network memory:
@@ -199,7 +205,10 @@ namespace NeuralNetwork.Core
                     }
 
                     // Save train graphics:
-                    _trainVisualizator.SaveGraphics();
+                    if(withVisualization)
+                    {
+                        _trainVisualizator.SaveGraphics();
+                    }
                 }
 
                 Console.WriteLine("Training success!");
