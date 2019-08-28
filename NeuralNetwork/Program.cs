@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using NeuralNetwork.Core;
 using NeuralNetwork.ServicesManager;
@@ -24,6 +23,7 @@ namespace NeuralNetwork
             #endregion
 
             const int receptors = 75;
+
             const int numberOfOutputClasses = 1; // Количество наших классов
             int[] neuronByLayer = { 50, 50, numberOfOutputClasses };
 
