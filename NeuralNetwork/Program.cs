@@ -23,26 +23,23 @@ namespace NeuralNetwork
             #endregion
 
             const int receptors = 75;
-            const int numberOfOutputClasses = 2; // Количество наших классов
-            int[] neuronByLayer = { 100, 40, 5, numberOfOutputClasses };
+
+            const int numberOfOutputClasses = 1; // Количество наших классов
+            int[] neuronByLayer = { 50, 50, numberOfOutputClasses };
 
             _fileManager = new FileManager("memory.txt");
 
-            _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
-
-            var networkTeacher = new NetworkTeacher(_net, _fileManager)
+            var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 2, _fileManager)
             {
-                Iteration = 4500,
-                TestVectors = _fileManager.ReadVectors("inputDataTest4.txt")
+                Iteration = 4245,
+                TestVectors = _fileManager.ReadVectors("inputDataTest6.txt")
             };
 
             //Vectorize();
 
-            //networkTeacher.PreparingLearningData();
+            //networkTeacher.PreparingLearningData(true, true);
 
-            //networkTeacher.TrainNet();
-
-            networkTeacher.DoTest();
+            networkTeacher.TrainNet(100);          
 
             Console.ReadKey();
         }

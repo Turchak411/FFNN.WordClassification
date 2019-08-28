@@ -12,33 +12,43 @@ namespace NeuralNetwork.Core
         private Merger _merger;
         private FileManager _fileManager;
 
-        private NeuralNetwork _net;
+        private List<NeuralNetwork> _netsList;
 
         public int Iteration { get; set; } = 20;
 
         public List<Coeficent> TestVectors { get; set; }
 
-        public NetworkTeacher(NeuralNetwork net, FileManager fileManager)
+        public NetworkTeacher(int[] neuronByLayer, int receptors, int netsCount, FileManager fileManager)
         {
-            _net = net;
+            _netsList = new List<NeuralNetwork>();
+
+            // Ицициализация сети по одинаковому шаблону:
+            for(int i = 0; i < netsCount; i++)
+            {
+                _netsList.Add(new NeuralNetwork(neuronByLayer, receptors, fileManager));
+            }
+
             _fileManager = fileManager;
         }
 
-        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration)
+        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration, int startIteration)
         {
             if (testVectors == null) return;
 
-            if (iteration > 0) ClearLine(outputSetLength+4);
+            if (iteration > startIteration) ClearLine(outputSetLength+4);
             var result = new StringBuilder();
             result.Append($"\nИтерация обучения: {iteration}\n");
             testVectors.ForEach(vector => result.Append($"   {vector._word}     "));
             result.Append('\n');
-            for (int k = 0; k < outputSetLength; k++)
+            //for (int k = 0; k < outputSetLength; k++)
+            //{
+            for (int i = 0; i < _netsList.Count; i++)
             {
                 foreach (var vector in testVectors)
                 {
-                    var outputVector = _net.Handle(vector._listFloat);
-                    result.Append($"{k} - {outputVector[k]:f3}\t");
+                    var outputVector = _netsList[i].Handle(vector._listFloat);
+                    //result.Append($"{k} - {outputVector[k]:f3}\t");
+                    result.Append($"{outputVector[0]:f6}\t");
                 }
                 result.Append('\n');
             }
@@ -125,7 +135,7 @@ namespace NeuralNetwork.Core
         /// <summary>
         /// Обучение нейросети
         /// </summary>
-        public void TrainNet(bool withSort = false)
+        public void TrainNet(int startIteration, bool withSort = false)
         {
             #region Load data from file
 
@@ -168,7 +178,7 @@ namespace NeuralNetwork.Core
             {
                 using (var progress = new ProgressBar())
                 {
-                    for (int iteration = 0; iteration < Iteration; iteration++)
+                    for (int iteration = startIteration; iteration < Iteration; iteration++)
                     {
                         // Calculating learn-speed rate:
                         var learningSpeed = 0.01 * Math.Pow(0.1, iteration / 150000);
@@ -176,18 +186,30 @@ namespace NeuralNetwork.Core
                         {
                             for (k = 40001; k < inputDataSets.Count; k++)
                             {
-                                _net.Handle(inputDataSets[k]);
-                                _net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
+                                for(int j = 0; j < outputDataSets[k].Length; j++)
+                                {
+                                    _netsList[j].Handle(inputDataSets[k]);
+
+                                    // Передает для обучения только 1 элемент выходного вектора
+                                    // (Класс на который конкретной сети нужно активироваться)
+                                    double[] outputDataSetArray = new double[1] { outputDataSets[k][j] };
+
+                                    _netsList[j].Teach(inputDataSets[k], outputDataSetArray, learningSpeed);
+                                }
+
                                 progress1.Report((double)k / inputDataSets.Count);
                             }   
                         }
 
                         progress.Report((double) iteration / Iteration);
-                        TestResult(TestVectors, outputDataSets[0].Length, iteration);
+                        TestResult(TestVectors, outputDataSets[0].Length, iteration, startIteration);
                     }
 
                     // Save network memory:
-                    _net.SaveMemory();
+                    for(int i = 0; i < _netsList.Count; i++)
+                    {
+                        _netsList[i].SaveMemory();
+                    }
                 }
 
                 Console.WriteLine("Training success!");
