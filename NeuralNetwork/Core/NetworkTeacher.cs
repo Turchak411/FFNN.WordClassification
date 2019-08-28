@@ -31,11 +31,11 @@ namespace NeuralNetwork.Core
             _fileManager = fileManager;
         }
 
-        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration)
+        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration, int startIteration)
         {
             if (testVectors == null) return;
 
-            if (iteration > 0) ClearLine(outputSetLength+4);
+            if (iteration > startIteration) ClearLine(outputSetLength+4);
             var result = new StringBuilder();
             result.Append($"\nИтерация обучения: {iteration}\n");
             testVectors.ForEach(vector => result.Append($"   {vector._word}     "));
@@ -115,7 +115,7 @@ namespace NeuralNetwork.Core
         /// <summary>
         /// Обучение нейросети
         /// </summary>
-        public void TrainNet(bool withSort = false)
+        public void TrainNet(int startIteration, bool withSort = false)
         {
             #region Load data from file
 
@@ -158,7 +158,7 @@ namespace NeuralNetwork.Core
             {
                 using (var progress = new ProgressBar())
                 {
-                    for (int iteration = 0; iteration < Iteration; iteration++)
+                    for (int iteration = startIteration; iteration < Iteration; iteration++)
                     {
                         // Calculating learn-speed rate:
                         var learningSpeed = 0.01 * Math.Pow(0.1, iteration / 150000);
@@ -182,7 +182,7 @@ namespace NeuralNetwork.Core
                         }
 
                         progress.Report((double) iteration / Iteration);
-                        TestResult(TestVectors, outputDataSets[0].Length, iteration);
+                        TestResult(TestVectors, outputDataSets[0].Length, iteration, startIteration);
                     }
 
                     // Save network memory:
