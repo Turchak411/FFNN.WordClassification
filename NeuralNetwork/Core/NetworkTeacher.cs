@@ -25,7 +25,7 @@ namespace NeuralNetwork.Core
             // Ицициализация сети по одинаковому шаблону:
             for(int i = 0; i < netsCount; i++)
             {
-                _netsList.Add(new NeuralNetwork(neuronByLayer, receptors, fileManager));
+                _netsList.Add(new NeuralNetwork(neuronByLayer, receptors, fileManager, "memory_" + i.ToString() + ".txt"));
             }
 
             _fileManager = fileManager;
@@ -188,7 +188,7 @@ namespace NeuralNetwork.Core
                     // Save network memory:
                     for(int i = 0; i < _netsList.Count; i++)
                     {
-                        _netsList[i].SaveMemory();
+                        _netsList[i].SaveMemory("memory_" + i.ToString() + ".txt");
                     }
                 }
 
