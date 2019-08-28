@@ -9,6 +9,19 @@ namespace NeuralNetwork.Core
 
         private Layer() { }
 
+        public Layer(int neuronCount, int weightCount, int layerNumber, FileManager fileManager)
+        {
+            double offsetValue = 0.5;
+
+            for (int i = 0; i < neuronCount; i++)
+            {
+                double[] weights = fileManager.LoadMemory(layerNumber, i);
+                Neuron neuron = new Neuron(weights, offsetValue, -1, 0.3);
+
+                _neuronList.Add(neuron);
+            }
+        }
+
         public Layer(int neuronCount, int weightCount, int layerNumber, FileManager fileManager, string memoryPath)
         {
             double offsetValue = 0.5;
