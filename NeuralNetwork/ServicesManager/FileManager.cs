@@ -84,6 +84,11 @@ namespace NeuralNetwork.ServicesManager
             File.Delete(_dataPath);
         }
 
+        public void PrepareToSaveMemory(string path)
+        {
+            File.Delete(path);
+        }
+
         public void SaveMemory(int layerNumber, int neuronNumber, double[] weights)
         {
             using (StreamWriter fileWriter = new StreamWriter(_dataPath, true))
