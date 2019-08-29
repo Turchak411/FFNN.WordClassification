@@ -230,7 +230,7 @@ namespace NeuralNetwork.Core
 
                     // Костыль связанный с подходом в виде ансамбля нейросетей 
                     // на сохранение памяти (чтобы запускалось в следующий раз)
-                    _netsList[0].SaveMemory();
+                    _netsList[0].SaveMemory("memory_0.txt");
 
                     // Save train graphics:
                     if (withVisualization)

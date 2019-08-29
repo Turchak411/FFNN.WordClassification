@@ -10,7 +10,7 @@ namespace NeuralNetwork.ServicesManager
     {
         private readonly string _dataPath;
 
-        public FileManager() { }
+        private FileManager() { }
 
         public FileManager(string dataPath = "memory.txt")
         {
