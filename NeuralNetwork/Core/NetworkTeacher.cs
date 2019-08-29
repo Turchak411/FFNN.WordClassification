@@ -10,12 +10,14 @@ namespace NeuralNetwork.Core
 {
     public class NetworkTeacher
     {
+        private List<NeuralNetwork> _netsList;
+
         private Merger _merger;
         private FileManager _fileManager;
 
-        private TrainVisualizator _trainVisualizator;
+        private TrainVisualizator _trainVisualizator; // BETA
 
-        private List<NeuralNetwork> _netsList;
+        private List<List<DynamicInfo>> _anwserDynamicInfos;
 
         public int Iteration { get; set; } = 20;
 
@@ -32,6 +34,13 @@ namespace NeuralNetwork.Core
             }
 
             _fileManager = fileManager;
+
+            // Инициализация последних ответов для учета динамики обучения:
+            _anwserDynamicInfos = new List<List<DynamicInfo>>();
+            for(int i = 0; i < netsCount; i++)
+            {
+                _anwserDynamicInfos.Add(new List<DynamicInfo>());
+            }
         }
 
         public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration, int startIteration, bool withVisualization)
@@ -46,16 +55,31 @@ namespace NeuralNetwork.Core
 
             for (int i = 0; i < _netsList.Count; i++)
             {
-                foreach (var vector in testVectors)
+                for(int k = 0; k < testVectors.Count; k++)
                 {
-                    var outputVector = _netsList[i].Handle(vector._listFloat);
+                    // Получение ответа:
+                    var outputVector = _netsList[i].Handle(testVectors[k]._listFloat);
 
-                    if(withVisualization)
+                    // Запись знака динамики для следующего ответа:
+                    if(_anwserDynamicInfos[i].Count == testVectors.Count)
                     {
-                        _trainVisualizator.AddPoint(vector, outputVector[0]);
+                        _anwserDynamicInfos[i][k] = new DynamicInfo(
+                                                        outputVector[0] > _anwserDynamicInfos[i][k]._lastAnwser ? '-' : '+',
+                                                        outputVector[0]
+                                                        );
+                    }
+                    else
+                    {
+                        _anwserDynamicInfos[i].Add(new DynamicInfo('=', outputVector[0]));
                     }
 
-                    result.Append($"{outputVector[0]:f6}\t");
+                    // Запись для визуализации:
+                    if (withVisualization)
+                    {
+                        _trainVisualizator.AddPoint(testVectors[k], outputVector[0]);
+                    }
+
+                    result.Append($"{outputVector[0]:f5} ({_anwserDynamicInfos[i][k]._lastSymbol})\t");
                 }
                 result.Append('\n');
             }
@@ -122,7 +146,7 @@ namespace NeuralNetwork.Core
         /// <summary>
         /// Обучение нейросети
         /// </summary>
-        public void TrainNet(int startIteration, bool withSort = false, bool withVisualization = false)
+        public void TrainNet(int startIteration = 0, bool withSort = false, bool withVisualization = false)
         {
             #region Load data from file
 
@@ -204,8 +228,12 @@ namespace NeuralNetwork.Core
                         _netsList[i].SaveMemory("memory_" + i.ToString() + ".txt");
                     }
 
+                    // Костыль связанный с подходом в виде ансамбля нейросетей 
+                    // на сохранение памяти (чтобы запускалось в следующий раз)
+                    _netsList[0].SaveMemory();
+
                     // Save train graphics:
-                    if(withVisualization)
+                    if (withVisualization)
                     {
                         _trainVisualizator.SaveGraphics();
                     }

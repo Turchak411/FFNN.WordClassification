@@ -12,7 +12,7 @@ namespace NeuralNetwork.ServicesManager
 
         public FileManager() { }
 
-        public FileManager(string dataPath)
+        public FileManager(string dataPath = "memory.txt")
         {
             // Запуск процесса генерации памяти в случае ее отсутствия:
             if (File.Exists(dataPath))
