@@ -122,7 +122,7 @@ namespace NeuralNetwork.Core
         /// <summary>
         /// Обучение нейросети
         /// </summary>
-        public void TrainNet(int startIteration, bool withSort = false, bool withVisualization = false)
+        public void TrainNet(int startIteration = 0, bool withSort = false, bool withVisualization = false)
         {
             #region Load data from file
 
