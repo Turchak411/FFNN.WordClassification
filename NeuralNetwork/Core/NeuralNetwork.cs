@@ -96,7 +96,7 @@ namespace NeuralNetwork
         public void SaveMemory(string path)
         {
             // Deleting old memory file:
-            _fileManager.PrepareToSaveMemory();
+            _fileManager.PrepareToSaveMemory(path);
 
             // Saving
             for (int i = 0; i < _layerList.Count; i++)

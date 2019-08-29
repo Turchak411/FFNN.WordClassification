@@ -30,13 +30,13 @@ namespace NeuralNetwork
 
             var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 2, _fileManager)
             {
-                Iteration = 4296,
+                Iteration = 4300,
                 TestVectors = _fileManager.ReadVectors("inputDataTestGamesPolitics.txt")
             };
 
             //networkTeacher.PreparingLearningData(true, true);
 
-            networkTeacher.TrainNet(4246);
+            networkTeacher.TrainNet(4297);
 
             Console.ReadKey();
         }

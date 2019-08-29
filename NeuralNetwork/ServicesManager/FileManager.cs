@@ -10,7 +10,7 @@ namespace NeuralNetwork.ServicesManager
     {
         private readonly string _dataPath;
 
-        public FileManager() { }
+        private FileManager() { }
 
         public FileManager(string dataPath = "memory.txt")
         {
@@ -82,6 +82,11 @@ namespace NeuralNetwork.ServicesManager
         public void PrepareToSaveMemory()
         {
             File.Delete(_dataPath);
+        }
+
+        public void PrepareToSaveMemory(string path)
+        {
+            File.Delete(path);
         }
 
         public void SaveMemory(int layerNumber, int neuronNumber, double[] weights)
