@@ -64,7 +64,7 @@ namespace NeuralNetwork.Core
                     if(_anwserDynamicInfos[i].Count == testVectors.Count)
                     {
                         _anwserDynamicInfos[i][k] = new DynamicInfo(
-                                                        outputVector[0] > _anwserDynamicInfos[i][k]._lastAnwser ? '-' : '+',
+                                                        outputVector[0] > _anwserDynamicInfos[i][k]._lastAnwser ? '+' : '-',
                                                         outputVector[0]
                                                         );
                     }
