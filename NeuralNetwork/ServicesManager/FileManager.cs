@@ -51,18 +51,27 @@ namespace NeuralNetwork.ServicesManager
         {
             double[] memory = new double[0];
 
-            using (StreamReader fileReader = new StreamReader(memoryPath))
+            try
             {
-                while (!fileReader.EndOfStream)
+                using (StreamReader fileReader = new StreamReader(memoryPath))
                 {
-                    string[] readedLine = fileReader.ReadLine().Split(' ');
-
-                    if ((readedLine[0] == "layer_" + layerNumber) && (readedLine[1] == "neuron_" + neuronNumber))
+                    while (!fileReader.EndOfStream)
                     {
-                        memory = GetWeights(readedLine);
+                        string[] readedLine = fileReader.ReadLine().Split(' ');
+
+                        if ((readedLine[0] == "layer_" + layerNumber) && (readedLine[1] == "neuron_" + neuronNumber))
+                        {
+                            memory = GetWeights(readedLine);
+                        }
                     }
                 }
             }
+            catch
+            {
+                // Создание памяти для отдельного класса в случае отсутствия таковой
+                File.Copy(_dataPath, memoryPath);
+            }
+            
 
             return memory;
         }
