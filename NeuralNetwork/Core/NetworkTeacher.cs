@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using NeuralNetwork.ServicesManager;
@@ -108,6 +109,75 @@ namespace NeuralNetwork.Core
             }
 
             Console.WriteLine(result);
+        }
+
+        public void PrintLearnStatistic()
+        {
+            Console.WriteLine("Start calculating statistic...");
+
+            int testPassed = 0;
+            int testFailed = 0;
+            int testFailed_lowActivationCause = 0;
+
+            #region Load data from file
+
+            List<double[]> inputDataSets = _fileManager.LoadDataSet("inputSets.txt");
+            List<double[]> outputDataSets = _fileManager.LoadDataSet("outputSets.txt");
+
+            #endregion
+
+            for (int i = 0; i < inputDataSets.Count; i++)
+            {
+                List<double> netResults = new List<double>();
+
+                for (int k = 0; k < _netsList.Count; k++)
+                {
+                    // Получение ответа:
+                    netResults.Add(_netsList[k].Handle(inputDataSets[i])[0]);
+                }
+
+                // Поиск максимально активирующейся сети (класса) с заданным порогом активации:
+                int maxIndex = FindMaxIndex(netResults, 0.8);
+
+                if (maxIndex == -1)
+                {
+                    testFailed++;
+                    testFailed_lowActivationCause++;
+                }
+                else
+                {
+                    if (outputDataSets[i][maxIndex] != 1)
+                    {
+                        testFailed++;
+                    }
+                    else
+                    {
+                        testPassed++;
+                    }
+                }
+            }
+
+            Console.WriteLine("Test passed: {0}\nTest failed: {1}\n     - Low activation causes: {2}\nPercent learned: {3:f2}", testPassed,
+                                                                                                                           testFailed,
+                                                                                                                           testFailed_lowActivationCause,
+                                                                                                                           (double)testPassed * 100 / (testPassed + testFailed));
+        }
+
+        private int FindMaxIndex(List<double> netResults, double threshold = 0.8)
+        {
+            int maxIndex = -1;
+            double maxValue = -1;
+
+            for(int i = 0; i < netResults.Count; i++)
+            {
+                if(maxValue < netResults[i] && netResults[i] >= threshold)
+                {
+                    maxIndex = i;
+                    maxValue = netResults[i];
+                }
+            }
+
+            return maxIndex;
         }
 
         /// <summary>

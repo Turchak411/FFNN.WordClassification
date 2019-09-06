@@ -40,6 +40,8 @@ namespace NeuralNetwork
 
             networkTeacher.CommonTest();
 
+            networkTeacher.PrintLearnStatistic();
+
             Console.ReadKey();
         }
 
