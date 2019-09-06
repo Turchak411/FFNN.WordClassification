@@ -43,25 +43,25 @@ namespace NeuralNetwork.Core
             }
         }
 
-        public void TestResult(List<Coeficent> testVectors, int outputSetLength, int iteration, int startIteration, bool withVisualization)
+        private void TestResult(int outputSetLength, int iteration, int startIteration, bool withVisualization)
         {
-            if (testVectors == null) return;
+            if (TestVectors == null) return;
 
             if (iteration > startIteration) ClearLine(outputSetLength+4);
             var result = new StringBuilder();
             result.Append($"\nИтерация обучения: {iteration}\n");
-            testVectors.ForEach(vector => result.Append($"   {vector._word}     "));
+            TestVectors.ForEach(vector => result.Append($"   {vector._word}     "));
             result.Append('\n');
 
             for (int i = 0; i < _netsList.Count; i++)
             {
-                for(int k = 0; k < testVectors.Count; k++)
+                for(int k = 0; k < TestVectors.Count; k++)
                 {
                     // Получение ответа:
-                    var outputVector = _netsList[i].Handle(testVectors[k]._listFloat);
+                    var outputVector = _netsList[i].Handle(TestVectors[k]._listFloat);
 
                     // Запись знака динамики для следующего ответа:
-                    if(_anwserDynamicInfos[i].Count == testVectors.Count)
+                    if(_anwserDynamicInfos[i].Count == TestVectors.Count)
                     {
                         _anwserDynamicInfos[i][k] = new DynamicInfo(
                                                         outputVector[0] > _anwserDynamicInfos[i][k]._lastAnwser ? '+' : '-',
@@ -76,10 +76,33 @@ namespace NeuralNetwork.Core
                     // Запись для визуализации:
                     if (withVisualization)
                     {
-                        _trainVisualizator.AddPoint(testVectors[k], outputVector[0]);
+                        _trainVisualizator.AddPoint(TestVectors[k], outputVector[0]);
                     }
 
                     result.Append($"{outputVector[0]:f5} ({_anwserDynamicInfos[i][k]._lastSymbol})\t");
+                }
+                result.Append('\n');
+            }
+
+            Console.WriteLine(result);
+        }
+
+        public void CommonTest()
+        {
+            if (TestVectors == null) return;
+
+            var result = new StringBuilder();
+            TestVectors.ForEach(vector => result.Append($"   {vector._word}     "));
+            result.Append('\n');
+
+            for (int i = 0; i < _netsList.Count; i++)
+            {
+                for (int k = 0; k < TestVectors.Count; k++)
+                {
+                    // Получение ответа:
+                    var outputVector = _netsList[i].Handle(TestVectors[k]._listFloat);
+
+                    result.Append($"{outputVector[0]:f5}\t");
                 }
                 result.Append('\n');
             }
@@ -219,7 +242,7 @@ namespace NeuralNetwork.Core
                         }
 
                         progress.Report((double) iteration / Iteration);
-                        TestResult(TestVectors, outputDataSets[0].Length, iteration, startIteration, withVisualization);
+                        TestResult(outputDataSets[0].Length, iteration, startIteration, withVisualization);
                     }
 
                     // Save network memory:
