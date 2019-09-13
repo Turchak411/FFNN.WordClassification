@@ -28,17 +28,17 @@ namespace NeuralNetwork
 
             _fileManager = new FileManager();
 
-            var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 2, _fileManager)
+            var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 13, _fileManager)
             {
-                Iteration = 40000,
-                TestVectors = _fileManager.ReadVectors("inputDataTestGamesPolitics1.txt")
+                Iteration = 200,
+                TestVectors = _fileManager.ReadVectors("inputDataTestPart1.txt")
             };
 
             //networkTeacher.PreparingLearningData(true);
 
-            //networkTeacher.TrainNet(0);
+            networkTeacher.TrainNet(102);
 
-            networkTeacher.CommonTest();
+            //networkTeacher.CommonTest();
 
             networkTeacher.PrintLearnStatistic();
 
