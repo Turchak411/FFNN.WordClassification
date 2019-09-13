@@ -88,7 +88,7 @@ namespace NeuralNetwork.Core
             Console.WriteLine(result);
         }
 
-        public void CommonTest()
+        public void CommonTest(bool isColorized = false)
         {
             if (TestVectors == null) return;
 
@@ -109,6 +109,54 @@ namespace NeuralNetwork.Core
             }
 
             Console.WriteLine(result);
+        }
+
+        public void CommonTestColorized()
+        {
+            if (TestVectors == null) return;
+
+            var result = new StringBuilder();
+            TestVectors.ForEach(vector => result.Append($"   {vector._word}     "));
+            result.Append('\n');
+
+            for (int i = 0; i < _netsList.Count; i++)
+            {
+                for (int k = 0; k < TestVectors.Count; k++)
+                {
+                    // Получение ответа:
+                    var outputVector = _netsList[i].Handle(TestVectors[k]._listFloat);
+
+                    //result.Append($"{outputVector[0]:f5}\t");
+
+                    Console.ForegroundColor = GetColorByActivation(outputVector[0]);
+                    Console.Write($"{outputVector[0]:f5}\t");
+                }
+
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write('\n');
+            }
+
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
+        private ConsoleColor GetColorByActivation(double value)
+        {
+            if(value > 0.95)
+            {
+                return ConsoleColor.Red;
+            }
+
+            if (value > 0.8)
+            {
+                return ConsoleColor.Magenta;
+            }
+
+            if (value > 0.5)
+            {
+                return ConsoleColor.Yellow;
+            }
+
+            return ConsoleColor.Gray;
         }
 
         public void PrintLearnStatistic()
