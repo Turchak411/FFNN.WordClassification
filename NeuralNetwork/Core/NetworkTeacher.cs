@@ -15,6 +15,7 @@ namespace NeuralNetwork.Core
 
         private Merger _merger;
         private FileManager _fileManager;
+        private MemoryChecker _memoryChecker;
 
         private TrainVisualizator _trainVisualizator; // BETA
 
@@ -209,6 +210,29 @@ namespace NeuralNetwork.Core
                                                                                                                            testFailed,
                                                                                                                            testFailed_lowActivationCause,
                                                                                                                            (double)testPassed * 100 / (testPassed + testFailed));
+        }
+
+        public void CheckMemory()
+        {
+            Console.WriteLine("Start memory cheking...");
+
+            _memoryChecker = new MemoryChecker();
+
+            for(int i = 0; i < _netsList.Count; i++)
+            {
+                if(_memoryChecker.IsValid("memory_" + i.ToString() + ".txt"))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("memory_" + i.ToString() + " - is valid.");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("memory_" + i.ToString() + " - is invalid!");
+                }
+            }
+
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         private int FindMaxIndex(List<double> netResults, double threshold = 0.8)

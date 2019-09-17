@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Core\NetworkTeacher.cs" />
+    <Compile Include="ServicesManager\MemoryChecker.cs" />
     <Compile Include="ServicesManager\Vectors\DynamicInfo.cs" />
     <Compile Include="ServicesManager\Visualize\TrainVisualizator.cs" />
     <Compile Include="ServicesManager\Vectors\Coeficient.cs" />
