@@ -36,12 +36,15 @@ namespace NeuralNetwork
 
             //networkTeacher.PreparingLearningData(true);
 
-            //networkTeacher.TrainNet(536);
+            networkTeacher.CheckMemory();
+            Console.ReadKey();
+
+            networkTeacher.TrainNet(536);
 
             //networkTeacher.CommonTest();
             networkTeacher.CommonTestColorized();
 
-            //networkTeacher.PrintLearnStatistic();
+            networkTeacher.PrintLearnStatistic();
 
             networkTeacher.CheckMemory();
 
