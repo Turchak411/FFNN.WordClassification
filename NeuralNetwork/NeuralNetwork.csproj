@@ -60,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesManager\Vectors\Merger.cs" />
     <Compile Include="ServicesManager\Vectors\Vectorizer.cs" />
+    <Compile Include="ServicesManager\Visualize\TrainVisualizator2.cs" />
     <Compile Include="ServicesManager\Visualize\VisualizeObject.cs" />
     <Compile Include="ServicesManager\WordVectorLoader.cs" />
   </ItemGroup>
