@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using System.Linq;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using NeuralNetwork.ServicesManager;
@@ -17,7 +17,7 @@ namespace NeuralNetwork.Core
         private FileManager _fileManager;
         private MemoryChecker _memoryChecker;
 
-        private TrainVisualizator _trainVisualizator; // BETA
+        private TrainVisualizator2 _trainVisualizator2; // BETA
 
         private List<List<DynamicInfo>> _anwserDynamicInfos;
 
@@ -75,12 +75,6 @@ namespace NeuralNetwork.Core
                         _anwserDynamicInfos[i].Add(new DynamicInfo('=', outputVector[0]));
                     }
 
-                    // Запись для визуализации:
-                    if (withVisualization)
-                    {
-                        _trainVisualizator.AddPoint(TestVectors[k], outputVector[0]);
-                    }
-
                     result.Append($"{outputVector[0]:f5} ({_anwserDynamicInfos[i][k]._lastSymbol})\t");
                 }
                 result.Append('\n');
@@ -89,7 +83,7 @@ namespace NeuralNetwork.Core
             Console.WriteLine(result);
         }
 
-        public void CommonTest(bool isColorized = false)
+        public void CommonTest()
         {
             if (TestVectors == null) return;
 
@@ -158,6 +152,30 @@ namespace NeuralNetwork.Core
             }
 
             return ConsoleColor.Gray;
+        }
+
+        public void Visualize(string path = "trainVisualizationData.txt")
+        {
+            // Create visualizator object and load prevData:
+            _trainVisualizator2 = new TrainVisualizator2();
+
+            // Save current data:
+            using (StreamWriter fileWriter = new StreamWriter(path))
+            {
+                for (int i = 0; i < TestVectors.Count; i++)
+                {
+                    fileWriter.Write(TestVectors[i]._word);
+
+                    for (int k = 0; k < _netsList.Count; k++)
+                    {
+                        fileWriter.Write(" " + _netsList[k].Handle(TestVectors[i]._listFloat)[0].ToString());
+                    }
+
+                    fileWriter.WriteLine();
+                }
+            }
+
+            _trainVisualizator2.DrawTestVectorsGraphics();
         }
 
         public void PrintLearnStatistic()
@@ -348,12 +366,6 @@ namespace NeuralNetwork.Core
 
             #endregion
 
-            if(withVisualization)
-            {
-                _trainVisualizator = new TrainVisualizator();
-                _trainVisualizator.StartVisualize(TestVectors);
-            }
-
             int k = 0;
             Console.WriteLine("Training net...");
             try
@@ -396,12 +408,6 @@ namespace NeuralNetwork.Core
                     // Костыль связанный с подходом в виде ансамбля нейросетей 
                     // на сохранение памяти (чтобы запускалось в следующий раз)
                     _netsList[0].SaveMemory("memory_0.txt");
-
-                    // Save train graphics:
-                    if (withVisualization)
-                    {
-                        _trainVisualizator.SaveGraphics();
-                    }
                 }
 
                 Console.WriteLine("Training success!");

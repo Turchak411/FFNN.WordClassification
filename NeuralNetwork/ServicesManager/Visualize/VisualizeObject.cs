@@ -11,10 +11,10 @@ namespace NeuralNetwork.ServicesManager.Visualize
         public string _word;
         public List<double> _points;
 
-        public VisualizeObject(string word)
+        public VisualizeObject(string word, List<double> points)
         {
             _word = word;
-            _points = new List<double>();
+            _points = points;
         }
     }
 }
