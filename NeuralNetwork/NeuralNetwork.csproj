@@ -49,7 +49,6 @@
     <Compile Include="Core\NetworkTeacher.cs" />
     <Compile Include="ServicesManager\MemoryChecker.cs" />
     <Compile Include="ServicesManager\Vectors\DynamicInfo.cs" />
-    <Compile Include="ServicesManager\Visualize\TrainVisualizator.cs" />
     <Compile Include="ServicesManager\Vectors\Coeficient.cs" />
     <Compile Include="ServicesManager\FileManager.cs" />
     <Compile Include="Core\Layer.cs" />
@@ -60,6 +59,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesManager\Vectors\Merger.cs" />
     <Compile Include="ServicesManager\Vectors\Vectorizer.cs" />
+    <Compile Include="ServicesManager\Visualize\TrainVisualizator2.cs" />
     <Compile Include="ServicesManager\Visualize\VisualizeObject.cs" />
     <Compile Include="ServicesManager\WordVectorLoader.cs" />
   </ItemGroup>
