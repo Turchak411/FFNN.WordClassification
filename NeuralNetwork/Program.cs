@@ -14,6 +14,9 @@ namespace NeuralNetwork
 
         static void Main(string[] args)
         {
+            int trainStartCount = 1000;
+            int trainEndCount = 1200;
+
             #region Set process settings
 
             Process thisProc = Process.GetCurrentProcess();
@@ -30,23 +33,31 @@ namespace NeuralNetwork
 
             var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 13, _fileManager)
             {
-                Iteration = 1000,
+                Iteration = trainEndCount,
                 TestVectors = _fileManager.ReadVectors("inputDataTestPart1.txt")
             };
 
             //networkTeacher.PreparingLearningData(true);
 
-            networkTeacher.CheckMemory();
+            if(networkTeacher.CheckMemory())
+            {
+                networkTeacher.TrainNet(trainStartCount);
 
-            networkTeacher.TrainNet(815);
+                networkTeacher.CommonTestColorized();
 
-            networkTeacher.CommonTestColorized();
+                networkTeacher.Visualize();
 
-            networkTeacher.Visualize();
+                networkTeacher.PrintLearnStatistic();
 
-            networkTeacher.PrintLearnStatistic();
-
-            networkTeacher.CheckMemory();
+                if (networkTeacher.CheckMemory())
+                {
+                    networkTeacher.BackupMemory(trainEndCount);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Train failed! Invalid memory!");
+            }
 
             Console.ReadKey();
         }

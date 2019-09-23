@@ -149,7 +149,6 @@ namespace NeuralNetwork.ServicesManager
             return inputVector;
         }
 
-
         public List<Coeficent> ReadVectors(string filePath)
         {
             if (!File.Exists(filePath)) return null;

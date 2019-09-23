@@ -230,8 +230,10 @@ namespace NeuralNetwork.Core
                                                                                                                            (double)testPassed * 100 / (testPassed + testFailed));
         }
 
-        public void CheckMemory()
+        public bool CheckMemory()
         {
+            bool isValid = true;
+
             Console.WriteLine("Start memory cheking...");
 
             _memoryChecker = new MemoryChecker();
@@ -245,12 +247,15 @@ namespace NeuralNetwork.Core
                 }
                 else
                 {
+                    isValid = false;
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("memory_" + i.ToString() + " - is invalid!");
                 }
             }
 
             Console.ForegroundColor = ConsoleColor.Gray;
+
+            return isValid;
         }
 
         private int FindMaxIndex(List<double> netResults, double threshold = 0.8)
@@ -268,6 +273,29 @@ namespace NeuralNetwork.Core
             }
 
             return maxIndex;
+        }
+
+        public void BackupMemory(int trainCount, string backupsDirectoryName = ".memory_backups")
+        {
+            // Check for existing main backups-directory:
+            if(!Directory.Exists(backupsDirectoryName))
+            {
+                Directory.CreateDirectory(backupsDirectoryName);
+            }
+
+            // Check for already-existing sub-directory (trainCount-named):
+            if (!Directory.Exists(backupsDirectoryName + "/ " + trainCount.ToString()))
+            {
+                Directory.CreateDirectory(backupsDirectoryName  + "/" + trainCount.ToString());
+            }
+
+            // Saving memory:
+            for (int i = 0; i < _netsList.Count; i++)
+            {
+                _netsList[i].SaveMemory(backupsDirectoryName + "/" + trainCount.ToString() + "/memory_" + i.ToString() + ".txt");
+            }
+
+            Console.WriteLine("Memory backuped!");
         }
 
         /// <summary>
