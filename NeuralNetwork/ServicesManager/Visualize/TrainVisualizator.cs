@@ -64,23 +64,17 @@ namespace NeuralNetwork.ServicesManager.Visualize
             int leftX = 200;
             int leftTopY = 130;
             int leftBotY = height - 50;
-            int rightX = width - 50;
-            int rightTopY = leftTopY;
-            int rightBotY = leftBotY;
 
             int xStep = 15;
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
                 Pen penBlack = new Pen(Color.Black, 10);
-                Pen penGreen = new Pen(Color.Green, 2);
-                Pen penRed = new Pen(Color.Red, 2);
+                Pen penGreen = new Pen(Color.Green, 10);
+                Pen penRed = new Pen(Color.Red, 10);
 
                 // Draw frame lines:
-                g.DrawLine(penRed, leftX, leftTopY, rightX, rightTopY);
-                g.DrawLine(penGreen, leftX, leftBotY, rightX, rightBotY);
-                g.DrawLine(penGreen, leftX, leftBotY, leftX, leftBotY);
-                g.DrawLine(penGreen, rightX, rightBotY, rightX, rightBotY);
+                g.DrawRectangle(new Pen(Color.Black, 2), new Rectangle(0, 0, width, height));
 
                 // Draw content:
                 float startX = leftX;
@@ -106,7 +100,21 @@ namespace NeuralNetwork.ServicesManager.Visualize
                 {
                     float secondY = startY - (float)vObjectPrev._points[i] * scaling;
 
-                    g.DrawLine(penBlack, startX, startY, startX, secondY);
+                    if ((float)vObject._points[i] > (float)vObjectPrev._points[i])
+                    {
+                        g.DrawLine(penGreen, startX, startY, startX, secondY);
+                    }
+                    else
+                    {
+                        if ((float) vObject._points[i] < (float) vObjectPrev._points[i])
+                        {
+                            g.DrawLine(penRed, startX, startY, startX, secondY);
+                        }
+                        else
+                        {
+                            g.DrawLine(penBlack, startX, startY, startX, secondY);
+                        }
+                    }
 
                     startX += xStep * 4;
                 }
