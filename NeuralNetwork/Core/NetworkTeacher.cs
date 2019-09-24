@@ -17,7 +17,7 @@ namespace NeuralNetwork.Core
         private FileManager _fileManager;
         private MemoryChecker _memoryChecker;
 
-        private TrainVisualizator2 _trainVisualizator2; // BETA
+        private TrainVisualizator _trainVisualizator;
 
         private List<List<DynamicInfo>> _anwserDynamicInfos;
 
@@ -45,7 +45,7 @@ namespace NeuralNetwork.Core
             }
         }
 
-        private void TestResult(int outputSetLength, int iteration, int startIteration, bool withVisualization)
+        private void TestResult(int outputSetLength, int iteration, int startIteration)
         {
             if (TestVectors == null) return;
 
@@ -157,7 +157,7 @@ namespace NeuralNetwork.Core
         public void Visualize(string path = "trainVisualizationData.txt")
         {
             // Create visualizator object and load prevData:
-            _trainVisualizator2 = new TrainVisualizator2();
+            _trainVisualizator = new TrainVisualizator();
 
             // Save current data:
             using (StreamWriter fileWriter = new StreamWriter(path))
@@ -168,14 +168,14 @@ namespace NeuralNetwork.Core
 
                     for (int k = 0; k < _netsList.Count; k++)
                     {
-                        fileWriter.Write(" " + _netsList[k].Handle(TestVectors[i]._listFloat)[0].ToString());
+                        fileWriter.Write(" " + _netsList[k].Handle(TestVectors[i]._listFloat)[0]);
                     }
 
                     fileWriter.WriteLine();
                 }
             }
 
-            _trainVisualizator2.DrawTestVectorsGraphics();
+            _trainVisualizator.DrawTestVectorsGraphics();
         }
 
         public void PrintLearnStatistic()
@@ -240,16 +240,16 @@ namespace NeuralNetwork.Core
 
             for(int i = 0; i < _netsList.Count; i++)
             {
-                if(_memoryChecker.IsValid("memory_" + i.ToString() + ".txt"))
+                if(_memoryChecker.IsValid("memory_" + i + ".txt"))
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("memory_" + i.ToString() + " - is valid.");
+                    Console.WriteLine("memory_" + i + " - is valid.");
                 }
                 else
                 {
                     isValid = false;
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("memory_" + i.ToString() + " - is invalid!");
+                    Console.WriteLine("memory_" + i + " - is invalid!");
                 }
             }
 
@@ -284,15 +284,15 @@ namespace NeuralNetwork.Core
             }
 
             // Check for already-existing sub-directory (trainCount-named):
-            if (!Directory.Exists(backupsDirectoryName + "/ " + Iteration.ToString()))
+            if (!Directory.Exists(backupsDirectoryName + "/ " + Iteration))
             {
-                Directory.CreateDirectory(backupsDirectoryName  + "/" + Iteration.ToString());
+                Directory.CreateDirectory(backupsDirectoryName  + "/" + Iteration);
             }
 
             // Saving memory:
             for (int i = 0; i < _netsList.Count; i++)
             {
-                _netsList[i].SaveMemory(backupsDirectoryName + "/" + Iteration.ToString() + "/memory_" + i.ToString() + ".txt");
+                _netsList[i].SaveMemory(backupsDirectoryName + "/" + Iteration + "/memory_" + i + ".txt");
             }
 
             Console.WriteLine("Memory backuped!");
@@ -357,7 +357,7 @@ namespace NeuralNetwork.Core
         /// <summary>
         /// Обучение нейросети
         /// </summary>
-        public void TrainNet(int startIteration = 0, bool withSort = false, bool withVisualization = false)
+        public void TrainNet(int startIteration = 0, bool withSort = false)
         {
             #region Load data from file
 
@@ -424,7 +424,7 @@ namespace NeuralNetwork.Core
                         }
 
                         progress.Report((double) iteration / Iteration);
-                        TestResult(outputDataSets[0].Length, iteration, startIteration, withVisualization);
+                        TestResult(outputDataSets[0].Length, iteration, startIteration);
                     }
 
                     // Save network memory:

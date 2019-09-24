@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace NeuralNetwork.ServicesManager.Visualize
 {
-    public class TrainVisualizator2
+    public class TrainVisualizator
     {
         private List<VisualizeObject> _prevDataList = new List<VisualizeObject>();
 
-        public TrainVisualizator2()
+        public TrainVisualizator()
         {
             // Load prev data:
             _prevDataList = LoadData();
@@ -112,7 +112,12 @@ namespace NeuralNetwork.ServicesManager.Visualize
                 }
             }
 
-            bmp.Save(vObject._word + "- train result.png");
+            if (!Directory.Exists("graphics_train"))
+            {
+                Directory.CreateDirectory("graphics_train");
+            }
+
+            bmp.Save("graphics_train/" + vObject._word + "- train result.png");
         }
     }
 }
