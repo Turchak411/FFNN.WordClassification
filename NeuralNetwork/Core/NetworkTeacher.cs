@@ -275,7 +275,7 @@ namespace NeuralNetwork.Core
             return maxIndex;
         }
 
-        public void BackupMemory(int trainCount, string backupsDirectoryName = ".memory_backups")
+        public void BackupMemory(string backupsDirectoryName = ".memory_backups")
         {
             // Check for existing main backups-directory:
             if(!Directory.Exists(backupsDirectoryName))
@@ -284,15 +284,15 @@ namespace NeuralNetwork.Core
             }
 
             // Check for already-existing sub-directory (trainCount-named):
-            if (!Directory.Exists(backupsDirectoryName + "/ " + trainCount.ToString()))
+            if (!Directory.Exists(backupsDirectoryName + "/ " + Iteration.ToString()))
             {
-                Directory.CreateDirectory(backupsDirectoryName  + "/" + trainCount.ToString());
+                Directory.CreateDirectory(backupsDirectoryName  + "/" + Iteration.ToString());
             }
 
             // Saving memory:
             for (int i = 0; i < _netsList.Count; i++)
             {
-                _netsList[i].SaveMemory(backupsDirectoryName + "/" + trainCount.ToString() + "/memory_" + i.ToString() + ".txt");
+                _netsList[i].SaveMemory(backupsDirectoryName + "/" + Iteration.ToString() + "/memory_" + i.ToString() + ".txt");
             }
 
             Console.WriteLine("Memory backuped!");
