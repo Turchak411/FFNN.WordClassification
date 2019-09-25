@@ -355,9 +355,12 @@ namespace NeuralNetwork.Core
             Console.WriteLine($">>> Time interval: {time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds / 10:00} >>>");
 
         /// <summary>
-        /// Обучение нейросети
+        /// Обучение сети
         /// </summary>
-        public void TrainNet(int startIteration = 0, bool withSort = false)
+        /// <param name="startIteration"></param>
+        /// <param name="withSort"></param>
+        public void TrainNet(int startDataSetIndex, int endDataSetIndex,
+                             int startIteration = 0, bool withSort = false)
         {
             #region Load data from file
 
@@ -406,7 +409,7 @@ namespace NeuralNetwork.Core
                         var learningSpeed = 0.01 * Math.Pow(0.1, iteration / 150000);
                         using (var progress1 = new ProgressBar())
                         {
-                            for (k = 0; k < inputDataSets.Count; k++)
+                            for (k = startDataSetIndex; k < endDataSetIndex; k++) //inputDataSets.Count; k++)
                             {
                                 for(int j = 0; j < outputDataSets[k].Length; j++)
                                 {

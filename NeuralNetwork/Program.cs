@@ -14,8 +14,8 @@ namespace NeuralNetwork
 
         static void Main(string[] args)
         {
-            int trainStartCount = 1082;
-            int trainEndCount = 1200;
+            int trainStartCount = 0;
+            int trainEndCount = 100;
 
             #region Set process settings
 
@@ -41,7 +41,7 @@ namespace NeuralNetwork
 
             if(networkTeacher.CheckMemory())
             {
-                networkTeacher.TrainNet(trainStartCount);
+                networkTeacher.TrainNet(0, 20500, trainStartCount);
 
                 networkTeacher.CommonTestColorized();
 
