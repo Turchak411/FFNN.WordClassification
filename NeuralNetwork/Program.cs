@@ -41,7 +41,7 @@ namespace NeuralNetwork
 
             if(networkTeacher.CheckMemory())
             {
-                networkTeacher.TrainNet(0, 20500, trainStartCount);
+                networkTeacher.TrainNet(0, 10000, trainStartCount);
 
                 networkTeacher.CommonTestColorized();
 

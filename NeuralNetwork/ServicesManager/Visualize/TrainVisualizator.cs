@@ -102,13 +102,13 @@ namespace NeuralNetwork.ServicesManager.Visualize
 
                     if ((float)vObject._points[i] > (float)vObjectPrev._points[i])
                     {
-                        g.DrawLine(penGreen, startX, startY, startX, secondY);
+                        g.DrawLine(penRed, startX, startY, startX, secondY);
                     }
                     else
                     {
                         if ((float) vObject._points[i] < (float) vObjectPrev._points[i])
                         {
-                            g.DrawLine(penRed, startX, startY, startX, secondY);
+                            g.DrawLine(penGreen, startX, startY, startX, secondY);
                         }
                         else
                         {

@@ -178,7 +178,7 @@ namespace NeuralNetwork.Core
             _trainVisualizator.DrawTestVectorsGraphics();
         }
 
-        public void PrintLearnStatistic()
+        public void PrintLearnStatistic(int startDataSetIndex, int endDataSetIndex)
         {
             Console.WriteLine("Start calculating statistic...");
 
@@ -193,7 +193,7 @@ namespace NeuralNetwork.Core
 
             #endregion
 
-            for (int i = 0; i < inputDataSets.Count; i++)
+            for (int i = startDataSetIndex; i < endDataSetIndex; i++) //inputDataSets.Count; i++)
             {
                 List<double> netResults = new List<double>();
 
@@ -422,7 +422,7 @@ namespace NeuralNetwork.Core
                                     _netsList[j].Teach(inputDataSets[k], outputDataSetArray, learningSpeed);
                                 }
 
-                                progress1.Report((double)k / inputDataSets.Count);
+                                progress1.Report((double) k / endDataSetIndex); //inputDataSets.Count);
                             }   
                         }
 
