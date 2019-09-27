@@ -83,6 +83,48 @@ namespace NeuralNetwork.Core
             Console.WriteLine(result);
         }
 
+        private void TestResultExtended(int outputSetLength, int iteration, int startIteration)
+        {
+            if (TestVectors == null) return;
+
+            if (iteration > startIteration) ClearLine(outputSetLength + 4);
+            var result = new StringBuilder();
+            result.Append($"\nИтерация обучения: {iteration}\n");
+            TestVectors.ForEach(vector => result.Append($"   {vector._word}     "));
+            result.Append('\n');
+
+            for (int i = 0; i < _netsList.Count; i++)
+            {
+                for (int k = 0; k < TestVectors.Count; k++)
+                {
+                    // Получение ответа:
+                    var outputVector = _netsList[i].Handle(TestVectors[k]._listFloat);
+
+                    double different = 0;
+
+                    // Запись знака динамики для следующего ответа:
+                    if (_anwserDynamicInfos[i].Count == TestVectors.Count)
+                    {
+                        different = Math.Abs(outputVector[0] - _anwserDynamicInfos[i][k]._lastAnwser);
+
+                        _anwserDynamicInfos[i][k] = new DynamicInfo(
+                            outputVector[0] > _anwserDynamicInfos[i][k]._lastAnwser ? '+' : '-',
+                            outputVector[0]
+                        );
+                    }
+                    else
+                    {
+                        _anwserDynamicInfos[i].Add(new DynamicInfo('=', outputVector[0]));
+                    }
+
+                    result.Append($"{outputVector[0]:f5} ({_anwserDynamicInfos[i][k]._lastSymbol}) ({_anwserDynamicInfos[i][k]._lastSymbol}{different:f5})\t");
+                }
+                result.Append('\n');
+            }
+
+            Console.WriteLine(result);
+        }
+
         public void CommonTest()
         {
             if (TestVectors == null) return;
@@ -427,7 +469,7 @@ namespace NeuralNetwork.Core
                         }
 
                         progress.Report((double) iteration / Iteration);
-                        TestResult(outputDataSets[0].Length, iteration, startIteration);
+                        TestResultExtended(outputDataSets[0].Length, iteration, startIteration);
                     }
 
                     // Save network memory:

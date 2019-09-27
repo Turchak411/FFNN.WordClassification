@@ -14,12 +14,12 @@ namespace NeuralNetwork
 
         static void Main(string[] args)
         {
-            int trainStartCount = 0;
-            int trainEndCount = 5;
+            int trainStartCount = 4920;
+            int trainEndCount = 4922;
 
             // Для блочного обучения указать:
-            int startDataSetIndex = 0;
-            int endDataSetIndex = 600;
+            int startDataSetIndex = 296848;
+            int endDataSetIndex = 306848;
 
             #region Set process settings
 
