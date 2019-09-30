@@ -14,8 +14,8 @@ namespace NeuralNetwork
 
         static void Main(string[] args)
         {
-            int trainStartCount = 4920;
-            int trainEndCount = 4922;
+            int trainStartCount = 11521;
+            int trainEndCount = 13820;
 
             // Для блочного обучения указать:
             int startDataSetIndex = 296848;
@@ -51,7 +51,7 @@ namespace NeuralNetwork
 
                 networkTeacher.Visualize();
 
-                networkTeacher.PrintLearnStatistic(startDataSetIndex, endDataSetIndex);
+                networkTeacher.PrintLearnStatistic(startDataSetIndex, endDataSetIndex, true);
 
                 if (networkTeacher.CheckMemory())
                 {

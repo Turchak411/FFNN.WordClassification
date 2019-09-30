@@ -220,7 +220,27 @@ namespace NeuralNetwork.Core
             _trainVisualizator.DrawTestVectorsGraphics();
         }
 
-        public void PrintLearnStatistic(int startDataSetIndex, int endDataSetIndex)
+        private void Logging(int testPassed, int testFailed, int testFailedLowActivationCause, string logsDirectoryName = ".logs")
+        {
+            // Check for existing main logs-directory:
+            if (!Directory.Exists(logsDirectoryName))
+            {
+                Directory.CreateDirectory(logsDirectoryName);
+            }
+
+            // Save logs:
+            using (StreamWriter fileWriter = new StreamWriter(logsDirectoryName + "/" + Iteration + ".txt"))
+            {
+                fileWriter.WriteLine("Test passed: " + testPassed);
+                fileWriter.WriteLine("Test failed: " + testFailed);
+                fileWriter.WriteLine("     - Low activation causes: " + testFailedLowActivationCause);
+                fileWriter.WriteLine("Percent learned: {0:f2}", (double)testPassed * 100 / (testPassed + testFailed));
+            }
+            
+            Console.WriteLine("Learn statistic logs saved in .logs!");
+        }
+
+        public void PrintLearnStatistic(int startDataSetIndex, int endDataSetIndex, bool withLogging = false)
         {
             Console.WriteLine("Start calculating statistic...");
 
@@ -264,6 +284,12 @@ namespace NeuralNetwork.Core
                         testPassed++;
                     }
                 }
+            }
+
+            // Logging (optional):
+            if (withLogging)
+            {
+                Logging(testPassed, testFailed, testFailed_lowActivationCause);
             }
 
             Console.WriteLine("Test passed: {0}\nTest failed: {1}\n     - Low activation causes: {2}\nPercent learned: {3:f2}", testPassed,
