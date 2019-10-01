@@ -10,12 +10,10 @@ namespace NeuralNetwork
     {
         private static FileManager _fileManager;
 
-        private static Vectorizer _vectorizer;
-
         static void Main(string[] args)
         {
-            int trainStartCount = 11521;
-            int trainEndCount = 13820;
+            int trainStartCount = 13820;
+            int trainEndCount = 16420;
 
             // Для блочного обучения указать:
             int startDataSetIndex = 296848;
@@ -60,21 +58,10 @@ namespace NeuralNetwork
             }
             else
             {
-                Console.WriteLine("Train failed! Invalid memory!");
+                Console.WriteLine("Train failed!");
             }
 
             Console.ReadKey();
-        }
-
-        private static void Vectorize()
-        {
-            string trainDataFolder = "DataSet";
-            string outputDataFolder = "vectorizedData";
-
-            _vectorizer = new Vectorizer();
-            _vectorizer.Vectorizing(trainDataFolder, outputDataFolder);
-
-            Console.WriteLine("Vectorizing done!");
         }
     }
 }
