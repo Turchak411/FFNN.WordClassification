@@ -163,6 +163,9 @@ namespace NeuralNetwork.Core
                     // Получение ответа:
                     var outputVector = _netsList[i].Handle(TestVectors[k]._listFloat);
 
+                    // Костыль: для корректного теста сетям нужна по крайней мере одна итерация обучения:
+                    _netsList[i].Teach(TestVectors[k]._listFloat, new double[1] {1}, 0.01); //0.000000000000001);
+
                     //result.Append($"{outputVector[0]:f5}\t");
 
                     Console.ForegroundColor = GetColorByActivation(outputVector[0]);

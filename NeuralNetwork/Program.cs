@@ -12,7 +12,7 @@ namespace NeuralNetwork
 
         static void Main(string[] args)
         {
-            int trainStartCount = 13820;
+            int trainStartCount = 13821;
             int trainEndCount = 16420;
 
             // Для блочного обучения указать:
@@ -42,7 +42,7 @@ namespace NeuralNetwork
             //networkTeacher.PreparingLearningData(true);
 
             if(networkTeacher.CheckMemory())
-            {
+            { 
                 networkTeacher.TrainNet(startDataSetIndex, endDataSetIndex, trainStartCount);
 
                 networkTeacher.CommonTestColorized();
