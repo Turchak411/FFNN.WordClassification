@@ -110,5 +110,9 @@ namespace NeuralNetwork.Core
             fileManager.SaveMemory(layerNumber, neuronNumber, _weights);
         }
 
+        public void SaveMemory(FileManager fileManager, int layerNumber, int neuronNumber, string memoryPath)
+        {
+            fileManager.SaveMemory(layerNumber, neuronNumber, _weights, memoryPath);
+        }
     }
 }

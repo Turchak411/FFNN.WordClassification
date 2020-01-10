@@ -8,13 +8,17 @@ namespace NeuralNetwork
 {
     static class Program
     {
-        private static NeuralNetwork _net;
         private static FileManager _fileManager;
-
-        private static Vectorizer _vectorizer;
 
         static void Main(string[] args)
         {
+            int trainStartCount = 13821;
+            int trainEndCount = 16420;
+
+            // Для блочного обучения указать:
+            int startDataSetIndex = 296848;
+            int endDataSetIndex = 306848;
+
             #region Set process settings
 
             Process thisProc = Process.GetCurrentProcess();
@@ -27,32 +31,37 @@ namespace NeuralNetwork
             const int numberOfOutputClasses = 1; // Количество наших классов
             int[] neuronByLayer = { 50, 50, numberOfOutputClasses };
 
-            _fileManager = new FileManager("memory.txt");
+            _fileManager = new FileManager();
 
-            var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 2, _fileManager)
+            var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 13, _fileManager)
             {
-                Iteration = 4245,
-                TestVectors = _fileManager.ReadVectors("inputDataTest6.txt")
+                Iteration = trainEndCount,
+                TestVectors = _fileManager.ReadVectors("inputDataTestPart_temp.txt")
             };
 
-            //Vectorize();
+            //networkTeacher.PreparingLearningData(true);
 
-            //networkTeacher.PreparingLearningData(true, true);
+            if(networkTeacher.CheckMemory())
+            { 
+                networkTeacher.TrainNet(startDataSetIndex, endDataSetIndex, trainStartCount);
 
-            networkTeacher.TrainNet(100);          
+                networkTeacher.CommonTestColorized();
+
+                networkTeacher.Visualize();
+
+                networkTeacher.PrintLearnStatistic(startDataSetIndex, endDataSetIndex, true);
+
+                if (networkTeacher.CheckMemory())
+                {
+                    networkTeacher.BackupMemory();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Train failed!");
+            }
 
             Console.ReadKey();
-        }
-
-        private static void Vectorize()
-        {
-            string trainDataFolder = "DataSet";
-            string outputDataFolder = "vectorizedData";
-
-            _vectorizer = new Vectorizer();
-            _vectorizer.Vectorizing(trainDataFolder, outputDataFolder);
-
-            Console.WriteLine("Vectorizing done!");
         }
     }
 }

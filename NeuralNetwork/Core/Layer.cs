@@ -22,6 +22,19 @@ namespace NeuralNetwork.Core
             }
         }
 
+        public Layer(int neuronCount, int weightCount, int layerNumber, FileManager fileManager, string memoryPath)
+        {
+            double offsetValue = 0.5;
+
+            for (int i = 0; i < neuronCount; i++)
+            {
+                double[] weights = fileManager.LoadMemory(layerNumber, i, memoryPath);
+                Neuron neuron = new Neuron(weights, offsetValue, -1, 0.3);
+
+                _neuronList.Add(neuron);
+            }
+        }
+
         public double[] Handle(double[] data)
         {
             double[] layerResultVector = new double[_neuronList.Count];
@@ -105,6 +118,14 @@ namespace NeuralNetwork.Core
             for (int i = 0; i < _neuronList.Count; i++)
             {
                 _neuronList[i].SaveMemory(fileManager, layerNumber, i);
+            }
+        }
+
+        public void SaveMemory(FileManager fileManager, int layerNumber, string path)
+        {
+            for (int i = 0; i < _neuronList.Count; i++)
+            {
+                _neuronList[i].SaveMemory(fileManager, layerNumber, i, path);
             }
         }
     }
