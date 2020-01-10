@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A9CFD43B-07DE-43D4-8C52-99AD78E16A4A}</ProjectGuid>
+    <ProjectGuid>{AABE000B-A4BA-4008-A6F4-BFB56D0FCC9D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>NeuralNetwork</RootNamespace>
-    <AssemblyName>NeuralNetwork</AssemblyName>
+    <RootNamespace>UniqueVectors</RootNamespace>
+    <AssemblyName>UniqueVectors</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,44 +33,35 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hash2Vec, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hash2Vec.0.1.1\lib\netstandard2.0\Hash2Vec.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Core\NetworkTeacher.cs" />
-    <Compile Include="ServicesManager\MemoryChecker.cs" />
-    <Compile Include="ServicesManager\Vectors\DynamicInfo.cs" />
-    <Compile Include="ServicesManager\Vectors\Coeficient.cs" />
-    <Compile Include="ServicesManager\FileManager.cs" />
-    <Compile Include="Core\Layer.cs" />
-    <Compile Include="Core\NeuralNetwork.cs" />
-    <Compile Include="Core\Neuron.cs" />
+    <Compile Include="Core\DataSets.cs" />
+    <Compile Include="Core\UniqueVectors.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ServicesManager\ProgressBar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServicesManager\Vectors\Merger.cs" />
-    <Compile Include="ServicesManager\Visualize\TrainVisualizator.cs" />
-    <Compile Include="ServicesManager\Visualize\VisualizeObject.cs" />
-    <Compile Include="ServicesManager\WordVectorLoader.cs" />
+    <Compile Include="ServicesManager\SearchUniqueVectors.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WeightsGenerator\WeightsGenerator.csproj">
-      <Project>{4c17b48a-01c5-4578-ab2b-6ab58d466c21}</Project>
-      <Name>WeightsGenerator</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\NeuralNetwork\NeuralNetwork.csproj">
+      <Project>{a9cfd43b-07de-43d4-8c52-99ad78e16a4a}</Project>
+      <Name>NeuralNetwork</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

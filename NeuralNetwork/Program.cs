@@ -1,141 +1,67 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
+using NeuralNetwork.Core;
+using NeuralNetwork.ServicesManager;
+using NeuralNetwork.ServicesManager.Vectors;
 
 namespace NeuralNetwork
 {
-    class Program
+    static class Program
     {
-        private static NeuralNetwork _net;
         private static FileManager _fileManager;
-        private static Vectorizer _vectorizer;
-
-        private static object sync = new object();
 
         static void Main(string[] args)
         {
+            int trainStartCount = 13821;
+            int trainEndCount = 16420;
+
+            // Для блочного обучения указать:
+            int startDataSetIndex = 296848;
+            int endDataSetIndex = 306848;
+
+            #region Set process settings
+
             Process thisProc = Process.GetCurrentProcess();
             thisProc.PriorityClass = ProcessPriorityClass.High;
 
-            _fileManager = new FileManager("memory.txt");
-            int numberOfOutputClasses = 13; // Количество наших классов
-            int[] neuronByLayer = new[] { 70, 45, numberOfOutputClasses };
-            int receptors = 200;
-            _net = new NeuralNetwork(neuronByLayer, receptors, _fileManager);
+            #endregion
 
-            // * Vectorizing words:
-            // Vectorize();
+            const int receptors = 75;
 
-            // Train network:
-            TrainNet(receptors, numberOfOutputClasses);
+            const int numberOfOutputClasses = 1; // Количество наших классов
+            int[] neuronByLayer = { 50, 50, numberOfOutputClasses };
 
-            #region Testing
+            _fileManager = new FileManager();
 
-            double[] inputVector = new double[0];
-
-            using (StreamReader fileReader = new StreamReader("inputDataTest.txt"))
+            var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 13, _fileManager)
             {
-                while (!fileReader.EndOfStream)
-                {
-                    string[] readedData = fileReader.ReadLine().Split(' ');
-                    inputVector = new double[readedData.Length - 2];
+                Iteration = trainEndCount,
+                TestVectors = _fileManager.ReadVectors("inputDataTestPart_temp.txt")
+            };
 
-                    for (int i = 0; i < readedData.Length - 3; i++)
-                    {
-                        inputVector[i] = double.Parse(readedData[i + 1]);
-                    }
+            //networkTeacher.PreparingLearningData(true);
+
+            if(networkTeacher.CheckMemory())
+            { 
+                networkTeacher.TrainNet(startDataSetIndex, endDataSetIndex, trainStartCount);
+
+                networkTeacher.CommonTestColorized();
+
+                networkTeacher.Visualize();
+
+                networkTeacher.PrintLearnStatistic(startDataSetIndex, endDataSetIndex, true);
+
+                if (networkTeacher.CheckMemory())
+                {
+                    networkTeacher.BackupMemory();
                 }
             }
-
-            double[] outputVector = _net.Handle(inputVector);
-
-            #endregion
+            else
+            {
+                Console.WriteLine("Train failed!");
+            }
 
             Console.ReadKey();
-        }
-
-        private static void Vectorize()
-        {
-            string trainDataFolder = "data";
-            string outputDataFolder = "vectorizedData";
-
-            _vectorizer = new Vectorizer();
-            _vectorizer.Vectorizing(trainDataFolder, outputDataFolder);
-        }
-
-        private static void TrainNet(int receptors, int numberOfOutputClasses)
-        {
-            #region Preparing learning DATA
-
-            #region Preparing learning INPUT SETS
-
-            List<double[]> inputDataSets = new List<double[]>();
-            WordVectorLoader vectorLoader = new WordVectorLoader("vectorizedData");
-
-            Console.WriteLine("Load vectors data...");
-            inputDataSets = vectorLoader.LoadVectorsData(receptors);
-
-            #endregion
-
-            // Разделена загрузка входных и выходных сетов. Так затратнее по памяти, но правильно
-
-            #region Preparing learning OUTPUT SETS (ANWSERS)
-
-            Console.WriteLine("Load output sets...");
-            List<double[]> outputDataSets = vectorLoader.LoadOutputSets(numberOfOutputClasses);
-
-            #endregion
-
-            #endregion
-
-            #region Net training
-
-            Console.WriteLine("Training net...");
-
-            double learningSpeed = 0;
-
-            try
-            {
-                for (int i = 0; i < 5; i++) //15000; i++) //420000; i++)
-                {
-                    // Calculating learn-speed rate:
-                    learningSpeed = 0.01 * Math.Pow(0.1, i / 150000);
-
-                    //int k = 0;
-
-                    //Parallel.ForEach(inputDataSets,
-                    //    item =>
-                    //    {
-                    //lock (sync)
-                    //{
-                    //_net.Handle(inputDataSets[k]);
-
-                    //_net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
-
-                    //k++;
-                    //    }
-                    //});
-                    for (int k = 0; k < inputDataSets.Count; k++)
-                    {
-                        _net.Handle(inputDataSets[k]);
-
-                        _net.Teach(inputDataSets[k], outputDataSets[k], learningSpeed);
-                    }
-                }
-
-                // Save network memory:
-                _net.SaveMemory();
-
-                Console.WriteLine("Training success!");
-            }
-            catch
-            {
-                Console.WriteLine("Training failed!");
-            }
-
-            #endregion
         }
     }
 }

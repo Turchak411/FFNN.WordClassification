@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using NeuralNetwork.Core;
+using NeuralNetwork.ServicesManager;
 
 namespace NeuralNetwork
 {
     public class NeuralNetwork
     {
         protected List<Layer> _layerList = new List<Layer>();
-        private FileManager _fileManager;
+        private readonly FileManager _fileManager;
 
         protected NeuralNetwork() { }
 
@@ -19,6 +21,20 @@ namespace NeuralNetwork
             for (int i = 1; i < neuronsNumberByLayers.Length; i++)
             {
                 Layer layer = new Layer(neuronsNumberByLayers[i], neuronsNumberByLayers[i - 1], i, fileManager);
+                _layerList.Add(layer);
+            }
+        }
+
+        public NeuralNetwork(int[] neuronsNumberByLayers, int receptorsNumber, FileManager fileManager, string memoryPath)
+        {
+            _fileManager = fileManager;
+
+            Layer firstLayer = new Layer(neuronsNumberByLayers[0], receptorsNumber, 0, fileManager, memoryPath);
+            _layerList.Add(firstLayer);
+
+            for (int i = 1; i < neuronsNumberByLayers.Length; i++)
+            {
+                Layer layer = new Layer(neuronsNumberByLayers[i], neuronsNumberByLayers[i - 1], i, fileManager, memoryPath);
                 _layerList.Add(layer);
             }
         }
@@ -74,6 +90,18 @@ namespace NeuralNetwork
             for (int i = 0; i < _layerList.Count; i++)
             {
                 _layerList[i].SaveMemory(_fileManager, i);
+            }
+        }
+
+        public void SaveMemory(string path)
+        {
+            // Deleting old memory file:
+            _fileManager.PrepareToSaveMemory(path);
+
+            // Saving
+            for (int i = 0; i < _layerList.Count; i++)
+            {
+                _layerList[i].SaveMemory(_fileManager, i, path);
             }
         }
     }
