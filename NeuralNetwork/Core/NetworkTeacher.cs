@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NeuralNetwork.ServicesManager;
 using NeuralNetwork.ServicesManager.Vectors;
-using NeuralNetwork.ServicesManager.Visualize;
 
 namespace NeuralNetwork.Core
 {
@@ -16,8 +15,6 @@ namespace NeuralNetwork.Core
         private Merger _merger;
         private FileManager _fileManager;
         private MemoryChecker _memoryChecker;
-
-        private TrainVisualizator _trainVisualizator;
 
         private List<List<DynamicInfo>> _anwserDynamicInfos;
 
@@ -197,30 +194,6 @@ namespace NeuralNetwork.Core
             }
 
             return ConsoleColor.Gray;
-        }
-
-        public void Visualize(string path = "trainVisualizationData.txt")
-        {
-            // Create visualizator object and load prevData:
-            _trainVisualizator = new TrainVisualizator();
-
-            // Save current data:
-            using (StreamWriter fileWriter = new StreamWriter(path))
-            {
-                for (int i = 0; i < TestVectors.Count; i++)
-                {
-                    fileWriter.Write(TestVectors[i]._word);
-
-                    for (int k = 0; k < _netsList.Count; k++)
-                    {
-                        fileWriter.Write(" " + _netsList[k].Handle(TestVectors[i]._listFloat)[0]);
-                    }
-
-                    fileWriter.WriteLine();
-                }
-            }
-
-            _trainVisualizator.DrawTestVectorsGraphics();
         }
 
         private void Logging(int testPassed, int testFailed, int testFailedLowActivationCause, string logsDirectoryName = ".logs")

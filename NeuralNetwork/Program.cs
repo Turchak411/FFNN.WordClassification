@@ -43,8 +43,6 @@ namespace NeuralNetwork
 
                 networkTeacher.CommonTestColorized();
 
-                networkTeacher.Visualize();
-
                 networkTeacher.PrintLearnStatistic(true);
 
                 if (networkTeacher.CheckMemory())
