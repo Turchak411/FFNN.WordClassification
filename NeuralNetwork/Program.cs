@@ -12,12 +12,8 @@ namespace NeuralNetwork
 
         static void Main(string[] args)
         {
-            int trainStartCount = 13821;
-            int trainEndCount = 16420;
-
-            // Для блочного обучения указать:
-            int startDataSetIndex = 296848;
-            int endDataSetIndex = 306848;
+            int trainStartCount = 0;
+            int trainEndCount = 10000;
 
             #region Set process settings
 
@@ -33,23 +29,23 @@ namespace NeuralNetwork
 
             _fileManager = new FileManager();
 
-            var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 13, _fileManager)
+            var networkTeacher = new NetworkTeacher(neuronByLayer, receptors, 46, _fileManager)
             {
                 Iteration = trainEndCount,
                 TestVectors = _fileManager.ReadVectors("inputDataTestPart_temp.txt")
             };
 
-            //networkTeacher.PreparingLearningData(true);
+            networkTeacher.PreparingLearningData(false);
 
             if(networkTeacher.CheckMemory())
             { 
-                networkTeacher.TrainNet(startDataSetIndex, endDataSetIndex, trainStartCount);
+                networkTeacher.TrainNet(trainStartCount);
 
                 networkTeacher.CommonTestColorized();
 
                 networkTeacher.Visualize();
 
-                networkTeacher.PrintLearnStatistic(startDataSetIndex, endDataSetIndex, true);
+                networkTeacher.PrintLearnStatistic(true);
 
                 if (networkTeacher.CheckMemory())
                 {
